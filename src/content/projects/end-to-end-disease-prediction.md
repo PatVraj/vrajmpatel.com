@@ -3,8 +3,8 @@ title: 'End-to-End Disease Prediction Pipeline'
 domain: 'Machine Learning'
 featured: false
 order: 5
+tech: ['TensorFlow', 'Keras', 'Scikit-Learn', 'SHAP']
+github: 'https://github.com/PatVraj'
 ---
 
-- Architected a dynamic Deep Learning classifier achieving 75.5% accuracy, implementing Neural Architecture Search with Keras Tuner (Hyperband) to automatically optimize network topology (depth/width) and dropout rates
-- Optimized training efficiency on the BRFSS 2015 dataset by engineering a multi-stage coarse-to-fine GridSearchCV pipeline for SVMs and TensorFlow Callbacks (EarlyStopping), reducing computational overhead by ~40%
-- Engineered model interpretability modules to demystify "black box" predictions, integrating SHAP (DeepExplainer) to translate raw tensor weights into risk factors (identifying BMI & GenHlth as primary drivers)
+Developed a dynamic Deep Learning classifier with Neural Architecture Search (Keras Tuner) to optimize network topology. Engineered multi-stage GridSearchCV pipelines for SVMs and integrated SHAP modules to translate raw tensor weights into interpretable health risk factors.

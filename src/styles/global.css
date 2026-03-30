@@ -1,27 +1,15 @@
 @import 'tailwindcss';
 
 @theme {
-	--font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+	--font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 	--font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-
-	--color-surface: oklch(0.13 0.02 260);
-	--color-surface-elevated: oklch(0.17 0.02 260);
-	--color-border-subtle: oklch(0.28 0.02 260);
-	--color-text: oklch(0.88 0.01 260);
-	--color-text-muted: oklch(0.62 0.02 260);
-	--color-accent: oklch(0.72 0.08 240);
 }
 
 @layer base {
 	html {
 		@apply scroll-smooth antialiased;
-		color-scheme: dark;
 	}
 	body {
-		@apply bg-[var(--color-surface)] text-[var(--color-text)] font-sans;
 		font-feature-settings: 'kern' 1, 'liga' 1;
-	}
-	a {
-		@apply text-[var(--color-accent)] underline-offset-4 transition-colors hover:text-slate-200;
 	}
 }
