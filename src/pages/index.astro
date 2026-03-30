@@ -19,60 +19,58 @@ const featuredRendered = await Promise.all(
 	title="Vraj Patel — Information Systems Engineer & ML Researcher"
 	description="Information Systems Engineer & ML Researcher. M.S. Computer Science @ CU Boulder."
 >
-	<section class="mb-24 sm:mb-32 flex flex-col gap-6" aria-labelledby="hero-heading">
-		<div class="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-300 w-fit backdrop-blur-sm">
-			<span class="relative flex h-2 w-2">
-				<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75"></span>
-				<span class="relative inline-flex h-2 w-2 rounded-full bg-indigo-500"></span>
-			</span>
-			Open to new opportunities
+	<section class="mb-24 sm:mb-32 flex flex-col md:flex-row gap-10 items-center md:items-start" aria-labelledby="hero-heading">
+		<div class="flex-1 flex flex-col gap-6">
+			<h1 id="hero-heading" class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-6xl max-w-3xl">
+				I architect <span class="text-blue-600 dark:text-blue-400">reliable systems</span> at the intersection of data engineering & applied ML.
+			</h1>
+			<p class="mt-2 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-400 sm:text-xl">
+				I'm <strong class="font-medium text-slate-900 dark:text-slate-200">Vraj Patel</strong>, an Information Systems Engineer and Machine Learning Researcher based in Boulder, CO. Currently pursuing an M.S. in Computer Science at the University of Colorado Boulder.
+			</p>
+			<div class="mt-4 flex flex-wrap gap-4">
+				<a href="/projects" class="inline-flex items-center justify-center rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
+					View Projects
+				</a>
+				<a href="https://www.linkedin.com/in/vrajmp/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
+					LinkedIn
+				</a>
+			</div>
 		</div>
-		<h1 id="hero-heading" class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl max-w-3xl">
-			I architect <span class="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">reliable systems</span> at the intersection of data engineering & applied ML.
-		</h1>
-		<p class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-400 sm:text-xl">
-			I'm <strong class="font-medium text-slate-200">Vraj Patel</strong>, an Information Systems Engineer and Machine Learning Researcher based in Boulder, CO. Currently pursuing an M.S. in Computer Science at the University of Colorado Boulder.
-		</p>
-		<div class="mt-4 flex flex-wrap gap-4">
-			<a href="/projects" class="inline-flex items-center justify-center rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950">
-				View Projects
-			</a>
-			<a href="https://www.linkedin.com/in/vrajmp/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-lg border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950">
-				LinkedIn
-			</a>
+		<div class="shrink-0 w-48 h-48 sm:w-64 sm:h-64 rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-white/5 flex items-center justify-center shadow-sm">
+			<!-- Note: Add your image to public/profile.jpg (or public/profile.png) -->
+			<!-- Using an absolute path starting with / looks in the public/ folder -->
+			<img src="/profile.jpg" alt="Vraj Patel" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+			<div class="hidden text-slate-400 text-sm font-mono text-center p-4">Add your image at<br/>public/profile.jpg</div>
 		</div>
 	</section>
 
-	<div class="grid gap-16 md:grid-cols-12 md:gap-8">
-		<div class="md:col-span-5">
+	<div class="grid gap-16 md:grid-cols-12 md:gap-12">
+		<div class="md:col-span-4">
 			<section aria-labelledby="education-heading" class="sticky top-24">
-				<h2 id="education-heading" class="flex items-center gap-2 text-sm font-semibold tracking-widest text-slate-200 uppercase">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+				<h2 id="education-heading" class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase">
 					Education
 				</h2>
-				<ul class="mt-8 flex flex-col gap-8">
-					<li class="group relative flex flex-col items-start">
-						<div class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-white/5 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg"></div>
+				<ul class="mt-6 flex flex-col gap-6">
+					<li class="flex flex-col items-start">
 						<div class="z-10 w-full">
-							<h3 class="text-base font-semibold text-slate-200">M.S. in Computer Science</h3>
-							<p class="mt-1 font-mono text-sm text-indigo-400">University of Colorado Boulder</p>
+							<h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">M.S. in Computer Science</h3>
+							<p class="mt-1 text-sm text-blue-600 dark:text-blue-400">University of Colorado Boulder</p>
 						</div>
 					</li>
-					<li class="group relative flex flex-col items-start">
-						<div class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-white/5 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg"></div>
+					<li class="flex flex-col items-start">
 						<div class="z-10 w-full">
-							<h3 class="text-base font-semibold text-slate-200">B.S. in Computer Science <span class="text-slate-500 font-normal">(Business Minor)</span></h3>
-							<p class="mt-1 font-mono text-sm text-indigo-400">University of Colorado Boulder</p>
-							<p class="mt-2 text-sm text-slate-400">GPA 3.65/4.00 · Dean's List</p>
+							<h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">B.S. in Computer Science <span class="text-slate-500 font-normal block sm:inline">(Business Minor)</span></h3>
+							<p class="mt-1 text-sm text-blue-600 dark:text-blue-400">University of Colorado Boulder</p>
+							<p class="mt-1 text-sm text-slate-600 dark:text-slate-400">GPA 3.65/4.00 · Dean's List</p>
 						</div>
 					</li>
 				</ul>
 
-				<div class="mt-12 rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-					<h3 class="text-sm font-medium text-slate-200">Relevant Coursework</h3>
-					<div class="mt-4 flex flex-wrap gap-2">
-						{['Deep Learning & Neural Networks', 'Natural Language Processing', 'Computer Vision', 'Machine Learning', 'Advanced Data Science'].map(course => (
-							<span class="inline-flex items-center rounded-md bg-white/10 px-2.5 py-1 text-xs font-medium text-slate-300 ring-1 ring-inset ring-white/10">
+				<div class="mt-10">
+					<h3 class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase mb-4">Relevant Coursework</h3>
+					<div class="flex flex-wrap gap-2">
+						{['Deep Learning', 'Neural Networks', 'Natural Language Processing', 'Computer Vision', 'Machine Learning', 'Advanced Data Science', 'Algorithms', 'Cybersecurity'].map(course => (
+							<span class="inline-flex items-center rounded bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700 dark:bg-white/10 dark:text-slate-300">
 								{course}
 							</span>
 						))}
@@ -81,29 +79,27 @@ const featuredRendered = await Promise.all(
 			</section>
 		</div>
 
-		<div class="md:col-span-7">
+		<div class="md:col-span-8">
 			<section aria-labelledby="featured-heading">
-				<div class="flex items-center justify-between gap-4">
-					<h2 id="featured-heading" class="flex items-center gap-2 text-sm font-semibold tracking-widest text-slate-200 uppercase">
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+				<div class="flex items-center justify-between gap-4 border-b border-slate-200 pb-4 dark:border-white/10">
+					<h2 id="featured-heading" class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase">
 						Selected Work
 					</h2>
 				</div>
 				<div class="mt-8 flex flex-col gap-10">
 					{
 						featuredRendered.map(({ entry, Content }) => (
-							<article class="group relative flex flex-col items-start">
-								<div class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-white/5 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg"></div>
+							<article class="flex flex-col items-start">
 								<div class="z-10 w-full">
 									<div class="flex items-center gap-3">
-										<span class="inline-flex items-center rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-xs font-medium text-indigo-300 ring-1 ring-inset ring-indigo-500/20">
+										<span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-500/10 dark:text-blue-300">
 											{entry.data.domain}
 										</span>
 									</div>
-									<h3 class="mt-3 text-lg font-semibold text-slate-200 group-hover:text-indigo-400 transition-colors">
+									<h3 class="mt-3 text-xl font-bold text-slate-900 dark:text-slate-200">
 										{entry.data.title}
 									</h3>
-									<div class="mt-3 text-sm leading-relaxed text-slate-400 [&_p]:mb-3 [&_p:last-child]:mb-0">
+									<div class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400 [&_p]:mb-3 [&_p:last-child]:mb-0">
 										<Content />
 									</div>
 								</div>
@@ -112,7 +108,7 @@ const featuredRendered = await Promise.all(
 					}
 				</div>
 				<div class="mt-10">
-					<a href="/projects" class="group inline-flex items-center gap-2 text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
+					<a href="/projects" class="group inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
 						View all projects
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
 					</a>

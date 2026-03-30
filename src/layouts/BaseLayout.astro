@@ -35,25 +35,17 @@ const nav = [
 		/>
 		<title>{title}</title>
 	</head>
-	<body class="flex min-h-screen flex-col bg-slate-950 font-sans text-slate-300 selection:bg-indigo-500/30">
-		<div class="fixed inset-0 -z-10 h-full w-full bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] opacity-20"></div>
-		<div class="fixed inset-0 -z-10 h-full w-full">
-			<div class="absolute left-0 top-0 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/10 blur-[120px]"></div>
-		</div>
-
+	<body class="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 selection:bg-blue-500/30 dark:bg-slate-950 dark:text-slate-300">
 		<a
 			href="#main"
-			class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-slate-900 focus:px-4 focus:py-2 focus:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:underline"
+			class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-slate-900 focus:px-4 focus:py-2 focus:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:underline"
 			>Skip to content</a
 		>
 
-		<header class="sticky top-0 z-40 w-full border-b border-white/5 bg-slate-950/60 backdrop-blur-xl">
+		<header class="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/80 backdrop-blur-xl dark:border-white/5 dark:bg-slate-950/80">
 			<div class="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-6">
-				<a href="/" class="group flex items-center gap-2 no-underline outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded-md">
-					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500/20 group-hover:text-indigo-300 transition-colors">
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>
-					</div>
-					<span class="font-mono text-sm font-semibold tracking-tight text-slate-200">VRAJ PATEL</span>
+				<a href="/" class="group flex items-center gap-2 no-underline outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 rounded-md dark:focus-visible:ring-offset-slate-950">
+					<span class="font-mono text-sm font-bold tracking-tight text-slate-900 dark:text-slate-200">VRAJ PATEL</span>
 				</a>
 				<nav aria-label="Primary" class="hidden md:flex items-center gap-1">
 					{
@@ -61,10 +53,10 @@ const nav = [
 							<a
 								href={href}
 								class:list={[
-									'rounded-md px-3 py-2 text-sm font-medium transition-all outline-none focus-visible:ring-2 focus-visible:ring-indigo-500',
+									'rounded-md px-3 py-2 text-sm font-medium transition-all outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
 									Astro.url.pathname === href || (href !== '/' && Astro.url.pathname.startsWith(href))
-										? 'bg-white/10 text-white shadow-sm ring-1 ring-white/10'
-										: 'text-slate-400 hover:bg-white/5 hover:text-slate-200',
+										? 'bg-slate-100 text-slate-900 shadow-sm ring-1 ring-slate-200 dark:bg-white/10 dark:text-white dark:ring-white/10'
+										: 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-slate-200',
 								]}
 							>
 								{label}
@@ -72,28 +64,28 @@ const nav = [
 						))
 					}
 					<a
-						href="/VrajResume_Master.docx"
+						href="/resume.pdf"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="ml-2 rounded-md bg-indigo-500/10 px-4 py-2 text-sm font-medium text-indigo-300 transition-all hover:bg-indigo-500/20 hover:text-indigo-200 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ring-1 ring-indigo-500/20"
+						class="ml-2 rounded-md bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition-all hover:bg-blue-100 hover:text-blue-800 outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ring-1 ring-blue-200 dark:bg-blue-500/10 dark:text-blue-300 dark:hover:bg-blue-500/20 dark:hover:text-blue-200 dark:ring-blue-500/20"
 					>
 						Resume
 					</a>
 				</nav>
                 {/* Mobile nav simple fallback */}
-                <nav class="md:hidden flex gap-2">
-                    <a href="/experience" class="text-sm text-slate-400 hover:text-slate-200">Exp</a>
-                    <a href="/projects" class="text-sm text-slate-400 hover:text-slate-200">Proj</a>
-                    <a href="/VrajResume_Master.docx" class="text-sm text-indigo-400 hover:text-indigo-300">Resume</a>
+                <nav class="md:hidden flex gap-3">
+                    <a href="/experience" class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200">Experience</a>
+                    <a href="/projects" class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200">Projects</a>
+                    <a href="/resume.pdf" class="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">Resume</a>
                 </nav>
 			</div>
 		</header>
 
-		<main id="main" class="mx-auto w-full max-w-4xl flex-1 px-4 py-16 sm:px-6 md:py-24">
+		<main id="main" class="mx-auto w-full max-w-4xl flex-1 px-4 py-12 sm:px-6 md:py-20">
 			<slot />
 		</main>
 
-		<footer class="mt-auto border-t border-white/5 bg-slate-950/50 py-12">
+		<footer class="mt-auto border-t border-slate-200 bg-slate-50/50 py-12 dark:border-white/5 dark:bg-slate-950/50">
 			<div class="mx-auto flex max-w-4xl flex-col items-center justify-between gap-6 px-4 sm:flex-row sm:px-6">
 				<p class="font-mono text-sm text-slate-500">
 					© {new Date().getFullYear()} Vraj Patel. Boulder, CO.
