@@ -1,11 +1,98 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const featuredEntries = await getCollection('projects', ({ data }) => data.featured === true);
+const featured = featuredEntries.sort(
+	(a, b) => (a.data.order ?? 99) - (b.data.order ?? 99),
+);
+
+const featuredRendered = await Promise.all(
+	featured.map(async (entry) => {
+		const { Content } = await render(entry);
+		return { entry, Content };
+	}),
+);
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout
+	title="Vraj Patel — Portfolio"
+	description="Information Systems Engineer & ML Researcher. M.S. Computer Science @ CU Boulder."
+>
+	<section class="mb-20" aria-labelledby="hero-heading">
+		<p class="font-mono text-xs tracking-[0.2em] text-slate-500 uppercase">Portfolio</p>
+		<h1 id="hero-heading" class="mt-3 text-3xl font-semibold tracking-tight text-slate-100 sm:text-4xl">
+			Vraj Patel
+		</h1>
+		<p class="mt-2 text-lg text-slate-400 sm:text-xl">
+			Information Systems Engineer & Machine Learning Researcher
+		</p>
+		<p class="mt-6 max-w-2xl text-pretty leading-relaxed text-slate-400">
+			I build reliable systems at the intersection of data engineering, applied ML, and internal tooling.
+			Based in <span class="text-slate-300">Boulder, CO</span>, currently pursuing an M.S. in Computer
+			Science at the University of Colorado Boulder.
+		</p>
+	</section>
+
+	<section class="mb-20" aria-labelledby="education-heading">
+		<h2 id="education-heading" class="font-mono text-xs tracking-[0.2em] text-slate-500 uppercase">
+			Education
+		</h2>
+		<ul class="mt-6 space-y-6 border-l border-slate-800 pl-6">
+			<li class="relative">
+				<span
+					class="absolute top-1.5 -left-[25px] h-2 w-2 rounded-full border border-slate-600 bg-slate-950"
+					aria-hidden="true"></span>
+				<p class="font-medium text-slate-200">M.S. in Computer Science</p>
+				<p class="mt-1 text-sm text-slate-500">University of Colorado Boulder</p>
+			</li>
+			<li class="relative">
+				<span
+					class="absolute top-1.5 -left-[25px] h-2 w-2 rounded-full border border-slate-600 bg-slate-950"
+					aria-hidden="true"></span>
+				<p class="font-medium text-slate-200">B.S. in Computer Science (Business Minor)</p>
+				<p class="mt-1 text-sm text-slate-500">
+					University of Colorado Boulder · GPA 3.65/4.00 · Dean&apos;s List
+				</p>
+			</li>
+		</ul>
+		<div class="mt-8 rounded-lg border border-slate-800/80 bg-slate-900/30 p-5">
+			<p class="font-mono text-xs tracking-wider text-slate-500 uppercase">Relevant coursework</p>
+			<p class="mt-3 text-sm leading-relaxed text-slate-400">
+				Deep Learning & Neural Networks, Natural Language Processing, Computer Vision, Machine Learning,
+				Advanced Data Science
+			</p>
+		</div>
+	</section>
+
+	<section aria-labelledby="featured-heading">
+		<div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+			<h2 id="featured-heading" class="font-mono text-xs tracking-[0.2em] text-slate-500 uppercase">
+				Featured projects
+			</h2>
+			<a
+				href="/projects"
+				class="text-sm font-medium text-slate-400 no-underline hover:text-slate-200"
+			>
+				View all →
+			</a>
+		</div>
+		<div class="grid gap-6 sm:grid-cols-1">
+			{
+				featuredRendered.map(({ entry, Content }) => (
+					<article
+						class="rounded-xl border border-slate-800/80 bg-slate-900/20 p-6 transition-colors hover:border-slate-700/80"
+					>
+						<div class="flex flex-wrap items-baseline justify-between gap-2">
+							<h3 class="text-lg font-semibold text-slate-100">{entry.data.title}</h3>
+							<span class="font-mono text-xs text-slate-500">{entry.data.domain}</span>
+						</div>
+						<div class="mt-4 text-sm leading-relaxed text-slate-400 [&_p]:mb-3 [&_p:last-child]:mb-0">
+							<Content />
+						</div>
+					</article>
+				))
+			}
+		</div>
+	</section>
+</BaseLayout>
