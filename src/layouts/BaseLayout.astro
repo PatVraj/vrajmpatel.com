@@ -23,14 +23,25 @@ const nav = [
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title}</title>
 		<meta name="description" content={description} />
+		<meta name="keywords" content="Vraj Patel, Systems Integration Engineer, Machine Learning, AI Researcher, Software Engineer, CU Boulder, Data Engineering" />
+		<meta name="author" content="Vraj Patel" />
+		<meta name="robots" content="index, follow" />
+		
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.url} />
+		<meta property="og:site_name" content="Vraj Patel Portfolio" />
+		
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
+		
+		<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+		<link rel="sitemap" href="/sitemap-index.xml" />
+		
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
@@ -40,7 +51,18 @@ const nav = [
 			href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-		<title>{title}</title>
+		
+		<script type="application/ld+json" set:html={JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Vraj Patel",
+			"jobTitle": "Systems Integration Engineer & Machine Learning Researcher",
+			"url": "https://www.vrajmpatel.com",
+			"sameAs": [
+				"https://www.linkedin.com/in/vrajmp/",
+				"https://github.com/PatVraj"
+			]
+		})} />
 	</head>
 	<body class="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 selection:bg-blue-500/30 dark:bg-slate-950 dark:text-slate-300">
 		<a

@@ -25,6 +25,8 @@ const projects = defineCollection({
 		tech: z.array(z.string()).optional(),
 		github: z.string().url().optional(),
 		link: z.string().url().optional(),
+		paper: z.string().url().optional(),
+		privateRepo: z.boolean().optional(),
 	}),
 });
 

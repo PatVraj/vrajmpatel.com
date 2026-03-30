@@ -1,6 +1,6 @@
 ---
 organization: 'CU Boulder Institute of Behavioral Science'
-title: 'Desktop Support Engineer (Automation & Internal Tools)'
+title: 'Systems Integration Engineer (Automation & Internal Tools)'
 period: 'May 2025 – Present'
 order: 2
 ---
