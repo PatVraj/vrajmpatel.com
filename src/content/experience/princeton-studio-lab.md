@@ -2,7 +2,7 @@
 organization: 'Princeton University – Studio Lab'
 title: 'Research Assistant (Data Engineering & ML)'
 period: 'March 2023 – Present'
-order: 3
+order: 1
 ---
 
 - **Political Data Pipeline (ETL):** Engineered a cloud-hybrid pipeline to ingest 40+ GB of election speeches (Modi & Gandhi, 2014/2019) and archive 40+ years (1981–2024) of Lok Sabha debates, creating the largest unified dataset for Indian political linguistic analysis

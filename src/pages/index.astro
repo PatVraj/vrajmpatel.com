@@ -13,6 +13,9 @@ const featuredRendered = await Promise.all(
 		return { entry, Content };
 	}),
 );
+
+const expEntries = await getCollection('experience');
+const recentExperience = expEntries.sort((a, b) => a.data.order - b.data.order).slice(0, 3);
 ---
 
 <BaseLayout
@@ -30,24 +33,25 @@ const featuredRendered = await Promise.all(
 			<p class="text-xl font-medium text-blue-600 dark:text-blue-400 sm:text-2xl">
 				Systems Integration Engineer
 			</p>
-			<p class="max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+			<p class="max-w-2xl text-lg leading-relaxed text-slate-700 dark:text-slate-400">
 				Specializing in <strong class="font-medium text-slate-900 dark:text-slate-200">Machine Learning</strong> and <strong class="font-medium text-slate-900 dark:text-slate-200">Data Engineering ETL Pipelines</strong>. I architect reliable, scalable backend systems and intelligent automation. Based in Boulder, CO.
 			</p>
-			<div class="mt-4 flex flex-wrap justify-center sm:justify-start gap-4">
-				<a href="/projects" class="inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200 shadow-sm">
+			<div class="mt-6 flex flex-wrap justify-center sm:justify-start gap-4">
+				<a href="/projects" class="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:bg-blue-600 dark:hover:bg-blue-500 shadow-sm">
 					View Projects
 				</a>
-				<a href="https://www.linkedin.com/in/vrajmp/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 shadow-sm">
-					LinkedIn
+				<a href="/resume.pdf" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white shadow-sm">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+					Download Resume
 				</a>
 			</div>
 		</div>
 	</section>
 
 	<div class="grid gap-16 md:grid-cols-12 md:gap-12">
-		<div class="md:col-span-4">
-			<section aria-labelledby="education-heading" class="sticky top-24">
-				<h2 id="education-heading" class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase">
+		<div class="md:col-span-4 flex flex-col gap-16">
+			<section aria-labelledby="education-heading">
+				<h2 id="education-heading" class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase border-b border-slate-200 pb-4 dark:border-white/10">
 					Education
 				</h2>
 				<ul class="mt-6 flex flex-col gap-6">
@@ -66,7 +70,7 @@ const featuredRendered = await Promise.all(
 					</li>
 				</ul>
 
-				<div class="mt-10">
+				<div class="mt-8">
 					<h3 class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase mb-4">Relevant Coursework</h3>
 					<div class="flex flex-wrap gap-2">
 						{['Deep Learning', 'Neural Networks', 'Natural Language Processing', 'Computer Vision', 'Machine Learning', 'Advanced Data Science', 'Algorithms', 'Cybersecurity'].map(course => (
@@ -75,6 +79,31 @@ const featuredRendered = await Promise.all(
 							</span>
 						))}
 					</div>
+				</div>
+			</section>
+
+			<section aria-labelledby="experience-heading">
+				<h2 id="experience-heading" class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase border-b border-slate-200 pb-4 dark:border-white/10 mb-6">
+					Recent Experience
+				</h2>
+				<div class="flex flex-col gap-6">
+					{
+						recentExperience.map((entry) => (
+							<article class="flex flex-col items-start">
+								<div class="z-10 w-full">
+									<h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">{entry.data.title}</h3>
+									<p class="mt-1 text-sm text-blue-600 dark:text-blue-400">{entry.data.organization}</p>
+									<p class="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{entry.data.period}</p>
+								</div>
+							</article>
+						))
+					}
+				</div>
+				<div class="mt-6">
+					<a href="/experience" class="group inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
+						View full experience
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+					</a>
 				</div>
 			</section>
 		</div>
@@ -89,7 +118,7 @@ const featuredRendered = await Promise.all(
 				<div class="mt-8 flex flex-col gap-10">
 					{
 						featuredRendered.map(({ entry, Content }) => (
-							<article class="flex flex-col items-start rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm dark:border-white/10 dark:bg-white/5 transition-all hover:shadow-md">
+							<article class="flex flex-col items-start rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm dark:border-white/10 dark:bg-white/5 transition-all hover:shadow-md hover:-translate-y-1 hover:border-blue-500/30 dark:hover:border-blue-500/30">
 								<div class="z-10 w-full">
 									<div class="flex items-center justify-between gap-4 flex-wrap">
 										<div class="flex items-center gap-3">
@@ -115,7 +144,7 @@ const featuredRendered = await Promise.all(
 									<h3 class="mt-4 text-xl font-bold text-slate-900 dark:text-slate-200">
 										{entry.data.title}
 									</h3>
-									<div class="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-800 dark:[&_a]:text-blue-400 dark:hover:[&_a]:text-blue-300">
+									<div class="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-400 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-800 dark:[&_a]:text-blue-400 dark:hover:[&_a]:text-blue-300">
 										<Content />
 									</div>
 									{entry.data.tech && entry.data.tech.length > 0 && (

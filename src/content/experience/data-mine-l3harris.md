@@ -2,7 +2,7 @@
 organization: 'The Data Mine – Purdue University @ L3Harris'
 title: 'Undergraduate Research Assistant - Satellite Telemetry Data Analysis'
 period: 'August 2024 – May 2025'
-order: 2
+order: 3
 ---
 
 - Developed machine learning models to detect and identify cyberattack-based anomalies using satellite telemetry data from the NASA Simulator for Small Satellites (NOS3)

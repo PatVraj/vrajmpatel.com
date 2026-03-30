@@ -2,7 +2,7 @@
 organization: 'CU Boulder Institute of Behavioral Science'
 title: 'Desktop Support Engineer (Automation & Internal Tools)'
 period: 'May 2025 – Present'
-order: 4
+order: 2
 ---
 
 - Developing a full-stack ticket classification system using FastAPI and PostgreSQL, architecting a microservices based solution to automate incident tagging via a fine-tuned BERT transformer model
