@@ -2,7 +2,7 @@
 title: 'Full-Stack Student Marketplace Application (Ralphie Bites)'
 domain: 'Software Engineering'
 featured: false
-order: 7
+order: 8
 tech: ['Node.js', 'Express', 'PostgreSQL', 'Docker']
 github: 'https://github.com/PatVraj/ralphie-bites'
 privateRepo: true

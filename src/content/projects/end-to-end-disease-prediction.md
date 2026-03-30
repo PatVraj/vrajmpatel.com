@@ -2,7 +2,7 @@
 title: 'End-to-End Disease Prediction Pipeline'
 domain: 'Machine Learning'
 featured: false
-order: 5
+order: 6
 tech: ['TensorFlow', 'Keras', 'Scikit-Learn', 'SHAP']
 github: 'https://github.com/PatVraj/disease-prediction'
 privateRepo: true

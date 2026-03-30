@@ -2,7 +2,7 @@
 title: 'Real-Time NLP Detection Engine (HateBlocker)'
 domain: 'Machine Learning'
 featured: false
-order: 4
+order: 5
 tech: ['FastAPI', 'XGBoost', 'Scikit-Learn', 'Chrome Extension']
 github: 'https://github.com/PatVraj/hate-blocker'
 privateRepo: true

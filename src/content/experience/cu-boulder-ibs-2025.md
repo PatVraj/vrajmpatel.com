@@ -1,5 +1,5 @@
 ---
-organization: 'CU Boulder Institute of Behavioral Science'
+organization: 'University of Colorado Boulder - Institute of Behavioral Science'
 title: 'Systems Integration Engineer (Automation & Internal Tools)'
 period: 'May 2025 – Present'
 order: 2

@@ -2,7 +2,7 @@
 title: 'Automated Interview Scoring Engine'
 domain: 'Machine Learning'
 featured: false
-order: 6
+order: 7
 tech: ['SentenceTransformers', 'TensorFlow', 'Scikit-Learn', 'SHAP']
 github: 'https://github.com/PatVraj/automated-interview-scoring'
 privateRepo: true
