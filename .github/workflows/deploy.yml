@@ -19,7 +19,8 @@ jobs:
       - name: Install, build, and upload your site
         uses: withastro/action@v3
         # The action automatically detects npm, pnpm, or yarn based on your lockfile
-
+	with:
+          node-version: 22
   deploy:
     needs: build
     runs-on: ubuntu-latest
