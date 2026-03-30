@@ -1,0 +1,59 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+	entry: CollectionEntry<'projects'>;
+	showDomain?: boolean;
+}
+
+const { entry, showDomain = false } = Astro.props;
+---
+
+<article class="flex flex-col justify-between rounded-xl sm:rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm dark:border-white/10 dark:bg-white/5 transition-all hover:shadow-md hover:-translate-y-1 hover:border-blue-500/30 dark:hover:border-blue-500/30 h-full">
+	<div class="z-10 w-full">
+		<div class="flex items-start justify-between gap-4 flex-wrap mb-4">
+			{showDomain ? (
+				<div class="flex items-center gap-3">
+					<span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-500/10 dark:text-blue-300">
+						{entry.data.domain}
+					</span>
+				</div>
+			) : (
+				<h3 class="text-lg font-bold text-slate-900 dark:text-slate-200">
+					{entry.data.title}
+				</h3>
+			)}
+			<div class="flex items-center gap-3 shrink-0 ml-auto">
+				{entry.data.github && (
+					<a href={entry.data.github} target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+						<span class="sr-only">GitHub</span>
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.24c3-.34 6-1.53 6-6.76a5.2 5.2 0 0 0-1.5-3.8 5.4 5.4 0 0 0-.15-3.8s-1.2-.38-3.9 1.4a12.8 12.8 0 0 0-7 0C6.2 2.12 5 2.5 5 2.5a5.4 5.4 0 0 0-.15 3.8A5.2 5.2 0 0 0 3 10.1c0 5.22 3 6.42 6 6.76a4.8 4.8 0 0 0-1 3.24v4"/><path d="M3 19c3 1 4-1 5-1"/></svg>
+					</a>
+				)}
+				{entry.data.link && (
+					<a href={entry.data.link} target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+						<span class="sr-only">External Link</span>
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+					</a>
+				)}
+			</div>
+		</div>
+		{showDomain && (
+			<h3 class="mb-2 text-xl font-bold text-slate-900 dark:text-slate-200">
+				{entry.data.title}
+			</h3>
+		)}
+		<div class="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-400 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-800 dark:[&_a]:text-blue-400 dark:hover:[&_a]:text-blue-300">
+			<slot />
+		</div>
+	</div>
+	{entry.data.tech && entry.data.tech.length > 0 && (
+		<div class="mt-6 flex flex-wrap gap-2">
+			{entry.data.tech.map((techItem: string) => (
+				<span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 dark:bg-white/5 dark:text-slate-300 ring-1 ring-inset ring-slate-200 dark:ring-white/10">
+					{techItem}
+				</span>
+			))}
+		</div>
+	)}
+</article>
