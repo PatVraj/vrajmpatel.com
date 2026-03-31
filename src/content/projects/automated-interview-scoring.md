@@ -5,7 +5,6 @@ featured: false
 order: 7
 tech: ['SentenceTransformers', 'TensorFlow', 'Scikit-Learn', 'SHAP']
 github: 'https://github.com/PatVraj/automated-interview-scoring'
-privateRepo: true
 ---
 
 Designed a multimodal predictive regression pipeline fusing dense text embeddings with 100+ prosodic audio features. Used SentenceTransformers and Cosine Similarity to structure multi-turn dialogue, deploying K-Fold Cross-Validation to minimize prediction error.

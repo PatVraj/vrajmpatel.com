@@ -1,7 +1,7 @@
 ---
 title: 'Self-Hosted Cloud Infrastructure'
 domain: 'Systems Infrastructure'
-featured: true
+featured: false
 order: 1
 tech: ['TrueNAS', 'Docker Swarm', 'Portainer', 'Cloudflare Tunnels', 'Tailscale']
 github: 'https://github.com/PatVraj/homelab-infrastructure'

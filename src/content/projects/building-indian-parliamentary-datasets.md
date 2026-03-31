@@ -2,7 +2,7 @@
 title: 'Building Indian Parliamentary Datasets'
 domain: 'Research'
 featured: true
-order: 4
+order: 3
 tech: ['Web Scraping', 'Digitization', 'Data Engineering', 'Computational Social Science']
 paper: '/indian-parliament-data-grant.pdf'
 ---

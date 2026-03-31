@@ -10,19 +10,19 @@ const { entry, variant = 'detailed' } = Astro.props;
 ---
 
 {variant === 'compact' ? (
-	<article class="flex flex-col items-start">
+	<article class="group flex flex-col items-start rounded-lg transition-all hover:bg-slate-100/50 dark:hover:bg-white/5 -mx-4 p-4">
 		<div class="z-10 w-full">
-			<h3 class="text-base font-semibold text-slate-900 dark:text-slate-200">{entry.data.title}</h3>
+			<h3 class="text-base font-semibold text-slate-900 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{entry.data.title}</h3>
 			<p class="mt-1 text-sm text-blue-600 dark:text-blue-400">{entry.data.organization}</p>
 			<p class="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">{entry.data.period}</p>
 		</div>
 	</article>
 ) : (
 	<article class="relative group">
-		<span class="absolute -left-[31px] sm:-left-[39px] top-1.5 h-3 w-3 rounded-full border border-blue-500 bg-white dark:bg-slate-950 ring-4 ring-slate-50 dark:ring-slate-950 transition-transform duration-300 group-hover:scale-125"></span>
+		<span class="absolute -left-[31px] sm:-left-[39px] top-1.5 h-3 w-3 rounded-full border border-blue-500 bg-white dark:bg-slate-950 ring-4 ring-slate-50 dark:ring-slate-950 transition-transform duration-300 group-hover:scale-125 group-hover:bg-blue-500"></span>
 		
 		<div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-			<h2 class="text-xl font-bold text-slate-900 dark:text-slate-200">{entry.data.title}</h2>
+			<h2 class="text-xl font-bold text-slate-900 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{entry.data.title}</h2>
 			<span class="text-sm font-medium text-slate-500 dark:text-slate-400 sm:text-right">{entry.data.period}</span>
 		</div>
 		

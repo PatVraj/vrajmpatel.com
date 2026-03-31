@@ -9,7 +9,7 @@ interface Props {
 const { entry, showDomain = false } = Astro.props;
 ---
 
-<article class="flex flex-col justify-between rounded-xl sm:rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm dark:border-white/10 dark:bg-white/5 transition-all hover:shadow-md hover:-translate-y-1 hover:border-blue-500/30 dark:hover:border-blue-500/30 h-full">
+<article class="group flex flex-col justify-between rounded-xl sm:rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm dark:border-white/10 dark:bg-white/5 transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:border-blue-500/30 dark:hover:border-blue-500/30 h-full">
 	<div class="z-10 w-full">
 		<div class="flex items-start justify-between gap-4 flex-wrap mb-4">
 			{showDomain ? (
@@ -19,11 +19,17 @@ const { entry, showDomain = false } = Astro.props;
 					</span>
 				</div>
 			) : (
-				<h3 class="text-lg font-bold text-slate-900 dark:text-slate-200">
+				<h3 class="text-lg font-bold text-slate-900 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
 					{entry.data.title}
 				</h3>
 			)}
 			<div class="flex items-center gap-3 shrink-0 ml-auto">
+				{entry.data.notebook && (
+					<a href={entry.data.notebook} target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300" title="View Jupyter Notebook">
+						<span class="sr-only">Jupyter Notebook</span>
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="10" y1="12" x2="10" y2="18"/><line x1="14" y1="12" x2="14" y2="18"/><line x1="10" y1="15" x2="14" y2="15"/></svg>
+					</a>
+				)}
 				{entry.data.paper && (
 					<a href={entry.data.paper} target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300" title="View Research Paper">
 						<span class="sr-only">Research Paper</span>
@@ -32,13 +38,19 @@ const { entry, showDomain = false } = Astro.props;
 				)}
 				{entry.data.github && (
 					entry.data.privateRepo ? (
-						<div class="text-slate-400 cursor-not-allowed flex items-center justify-center" title="Private Repository">
-							<span class="sr-only">Private GitHub Repository</span>
+						<a
+							href={entry.data.github}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 flex items-center justify-center"
+							title="Private GitHub repository (sign-in required)"
+						>
+							<span class="sr-only">GitHub (private repository)</span>
 							<div class="relative inline-flex">
 								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-60"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.24c3-.34 6-1.53 6-6.76a5.2 5.2 0 0 0-1.5-3.8 5.4 5.4 0 0 0-.15-3.8s-1.2-.38-3.9 1.4a12.8 12.8 0 0 0-7 0C6.2 2.12 5 2.5 5 2.5a5.4 5.4 0 0 0-.15 3.8A5.2 5.2 0 0 0 3 10.1c0 5.22 3 6.42 6 6.76a4.8 4.8 0 0 0-1 3.24v4"/><path d="M3 19c3 1 4-1 5-1"/></svg>
 								<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute -bottom-1 -right-1 text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 rounded-full ring-1 ring-white dark:ring-slate-900"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
 							</div>
-						</div>
+						</a>
 					) : (
 						<a href={entry.data.github} target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
 							<span class="sr-only">GitHub</span>
@@ -55,7 +67,7 @@ const { entry, showDomain = false } = Astro.props;
 			</div>
 		</div>
 		{showDomain && (
-			<h3 class="mb-2 text-xl font-bold text-slate-900 dark:text-slate-200">
+			<h3 class="mb-2 text-xl font-bold text-slate-900 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
 				{entry.data.title}
 			</h3>
 		)}

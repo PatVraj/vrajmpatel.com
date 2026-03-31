@@ -3,9 +3,8 @@ title: 'End-to-End Disease Prediction Pipeline'
 domain: 'Machine Learning'
 featured: false
 order: 6
-tech: ['TensorFlow', 'Keras', 'Scikit-Learn', 'SHAP']
-github: 'https://github.com/PatVraj/disease-prediction'
-privateRepo: true
+tech: ['TensorFlow', 'Keras Tuner', 'Scikit-Learn', 'Pandas', 'NumPy']
+github: 'https://github.com/PatVraj/Classifying-Diabetes/tree/main'
 ---
 
-Developed a dynamic Deep Learning classifier with Neural Architecture Search (Keras Tuner) to optimize network topology. Engineered multi-stage GridSearchCV pipelines for SVMs and integrated SHAP modules to translate raw tensor weights into interpretable health risk factors.
+Diabetes risk modeling on **BRFSS 2015** tabular survey data (**400,000+** U.S. respondents). Compared **SVM**, **decision trees**, **random forests**, **logistic regression**, and **Keras Tuner**-driven neural networks, with explicit attention to **class imbalance** and the **recall–precision** tradeoff for screening. Reported tuned accuracies around **75.3%** (logistic regression), **74.8%** (SVM), and **74.3%** (decision tree); **GenHealth**, **BMI**, **age**, **high blood pressure**, and **income** surfaced as consistently important risk factors across models.

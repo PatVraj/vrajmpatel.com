@@ -3,8 +3,9 @@ title: 'Mushroom Classification Data Science'
 domain: 'Machine Learning'
 featured: false
 order: 9
-tech: ['K-Means Clustering', 'Gaussian Mixture Models', 'Scikit-Learn', 'Pandas']
+tech: ['K-Means', 'GMM', 'Scikit-Learn', 'Pandas', 'NumPy']
+github: 'https://github.com/PatVraj/mushroom-classification/tree/main'
 paper: '/mushroom-ds.pdf'
 ---
 
-Investigated advanced data science techniques for mushroom edibility prediction using a rich dataset of 61,000+ samples. Employed K-Means clustering and Gaussian Mixture Models (GMMs) to identify key morphological features, modeling complex distributions to effectively separate edible and poisonous species.
+Clustering-driven study of **edible vs. poisonous** mushrooms on **61,069** records (**173** species, **20** attributes) from a Kaggle morphological dataset. Ran **K-Means** on numeric traits (e.g. cap diameter, stem height and width) and **Gaussian mixture models** across **k = 1–11** with an elbow-style analysis, landing on **five** components with about **68%** representation purity. Incorporated **Jaccard**-style distances for categorical features to capture species overlap and relate morphology to toxicity.
