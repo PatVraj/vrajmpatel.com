@@ -1,0 +1,365 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="About — Vraj Patel"
+  description="About Vraj Patel — Systems Integration Engineer specializing in ML and backend systems. M.S. Computer Science (AI) at CU Boulder. Open to SWE and ML engineering roles."
+>
+  <div class="mb-12 border-b border-slate-200 pb-8 dark:border-white/10">
+    <h1
+      class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl"
+    >
+      About
+    </h1>
+  </div>
+
+  <div class="grid gap-12 md:grid-cols-12">
+    <!-- Left column: Photo + Quick Info -->
+    <div class="md:col-span-4 flex flex-col gap-8">
+      <div
+        class="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-xl ring-4 ring-blue-100 dark:border-slate-800 dark:ring-blue-500/20 bg-slate-100 dark:bg-slate-800"
+      >
+        <img
+          src="/profile.jpg"
+          alt="Vraj Patel"
+          class="w-full h-full object-cover"
+          loading="lazy"
+        />
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <div>
+          <h2
+            class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase mb-3"
+          >
+            Currently
+          </h2>
+          <ul
+            class="flex flex-col gap-2 text-sm text-slate-700 dark:text-slate-400"
+          >
+            <li class="flex items-start gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="mt-0.5 shrink-0 text-blue-500"
+                ><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                ></path><circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              Boulder, CO
+            </li>
+            <li class="flex items-start gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="mt-0.5 shrink-0 text-blue-500"
+                ><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path
+                  d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+              M.S. Computer Science (AI) — CU Boulder
+            </li>
+            <li class="flex items-start gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="mt-0.5 shrink-0 text-blue-500"
+                ><rect width="20" height="14" x="2" y="7" rx="2" ry="2"
+                ></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"
+                ></path>
+              </svg>
+              Systems Integration Engineer — CU Boulder IBS
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h2
+            class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase mb-3"
+          >
+            Open To
+          </h2>
+          <div class="flex flex-wrap gap-2">
+            {
+              [
+                "SWE Roles",
+                "ML Engineering",
+                "Backend Engineering",
+                "Research",
+              ].map((tag) => (
+                <span class="inline-flex items-center rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 dark:bg-green-500/10 dark:text-green-300 dark:ring-green-400/20">
+                  {tag}
+                </span>
+              ))
+            }
+          </div>
+        </div>
+
+        <div>
+          <h2
+            class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase mb-3"
+          >
+            Connect
+          </h2>
+          <ul class="flex flex-col gap-2 text-sm">
+            <li>
+              <a
+                href="mailto:vrajmp999@gmail.com"
+                class="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  ><rect width="20" height="16" x="2" y="4" rx="2"></rect><path
+                    d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                </svg>
+                vrajmp999@gmail.com
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.linkedin.com/in/vrajmp/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  ><path
+                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                  ></path><rect width="4" height="12" x="2" y="9"></rect><circle
+                    cx="4"
+                    cy="4"
+                    r="2"></circle>
+                </svg>
+                linkedin.com/in/vrajmp
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/PatVraj"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  ><path
+                    d="M15 22v-4a4.8 4.8 0 0 0-1-3.24c3-.34 6-1.53 6-6.76a5.2 5.2 0 0 0-1.5-3.8 5.4 5.4 0 0 0-.15-3.8s-1.2-.38-3.9 1.4a12.8 12.8 0 0 0-7 0C6.2 2.12 5 2.5 5 2.5a5.4 5.4 0 0 0-.15 3.8A5.2 5.2 0 0 0 3 10.1c0 5.22 3 6.42 6 6.76a4.8 4.8 0 0 0-1 3.24v4"
+                  ></path><path d="M3 19c3 1 4-1 5-1"></path>
+                </svg>
+                github.com/PatVraj
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right column: Bio narrative -->
+    <div class="md:col-span-8 flex flex-col gap-10">
+      <section aria-labelledby="bio-heading">
+        <h2
+          id="bio-heading"
+          class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase border-b border-slate-200 pb-4 dark:border-white/10 mb-6"
+        >
+          Background
+        </h2>
+        <div
+          class="flex flex-col gap-4 text-base leading-relaxed text-slate-700 dark:text-slate-400"
+        >
+          <p>
+            I'm a software engineer focused on the intersection of machine
+            learning and production systems. I build things that have to
+            actually work — inference pipelines that serve real requests, ETL
+            workflows processing tens of gigabytes, and backend APIs that hold
+            up under load.
+          </p>
+          <p>
+            My work spans both applied ML engineering and backend
+            infrastructure. On the research side, I collaborate with Studio Lab
+            — a computational social science lab that began at CU Boulder and
+            whose PI later moved to Princeton, rehiring me as a direct research
+            assistant. There, I've built large-scale political data pipelines
+            and NLP systems covering 40+ years of Indian parliamentary debates.
+            On the engineering side, I currently work at CU Boulder's Institute
+            of Behavioral Science, where I'm building a production ticket
+            classification system using fine-tuned BERT and a React analytics
+            dashboard.
+          </p>
+          <p>
+            I hold a B.S. in Computer Science (Business Minor) from CU Boulder —
+            graduating with a 3.65 GPA and 5x Dean's List honors — and I'm
+            currently pursuing my M.S. in Computer Science with an AI
+            specialization.
+          </p>
+          <p>
+            Outside of work, I run a self-hosted home lab (TrueNAS, Docker
+            Swarm, 24TB storage array), which keeps my infrastructure instincts
+            sharp and gives me a playground for things I don't get to do at
+            work.
+          </p>
+        </div>
+      </section>
+
+      <section aria-labelledby="interests-heading">
+        <h2
+          id="interests-heading"
+          class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase border-b border-slate-200 pb-4 dark:border-white/10 mb-6"
+        >
+          Technical Interests
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          {
+            [
+              "LLM Fine-Tuning & Inference",
+              "MLOps & Model Deployment",
+              "Distributed Systems",
+              "NLP & Transformers",
+              "Data Engineering",
+              "Computer Vision",
+              "API Design",
+              "Self-Hosted Infrastructure",
+            ].map((interest) => (
+              <span class="inline-flex items-center rounded-md bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700 dark:bg-white/5 dark:text-slate-300 ring-1 ring-inset ring-slate-200 dark:ring-white/10">
+                {interest}
+              </span>
+            ))
+          }
+        </div>
+      </section>
+
+      <section aria-labelledby="honors-heading">
+        <h2
+          id="honors-heading"
+          class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase border-b border-slate-200 pb-4 dark:border-white/10 mb-6"
+        >
+          Honors & Recognition
+        </h2>
+        <ul class="flex flex-col gap-4">
+          <li class="flex gap-4 items-start">
+            <span class="mt-1 shrink-0 w-2 h-2 rounded-full bg-blue-500"></span>
+            <div>
+              <p
+                class="text-sm font-semibold text-slate-900 dark:text-slate-200"
+              >
+                Dean's List — 5× Recipient
+              </p>
+              <p class="text-sm text-slate-500 dark:text-slate-400">
+                University of Colorado Boulder, B.S. Computer Science
+              </p>
+            </div>
+          </li>
+          <li class="flex gap-4 items-start">
+            <span class="mt-1 shrink-0 w-2 h-2 rounded-full bg-blue-500"></span>
+            <div>
+              <p
+                class="text-sm font-semibold text-slate-900 dark:text-slate-200"
+              >
+                Research Symposium Presenter
+              </p>
+              <p class="text-sm text-slate-500 dark:text-slate-400">
+                Presented ML cybersecurity research to stakeholders from US
+                Space Force, Lockheed Martin, CrowdStrike, and L3Harris — Data
+                Mine of the Rockies Symposium
+              </p>
+            </div>
+          </li>
+          <li class="flex gap-4 items-start">
+            <span class="mt-1 shrink-0 w-2 h-2 rounded-full bg-blue-500"></span>
+            <div>
+              <p
+                class="text-sm font-semibold text-slate-900 dark:text-slate-200"
+              >
+                Indian Parliament Data Grant
+              </p>
+              <p class="text-sm text-slate-500 dark:text-slate-400">
+                Contributed to Princeton University Studio Lab's landmark
+                computational social science dataset covering 40+ years of Lok
+                Sabha and Rajya Sabha debates
+              </p>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="resume-heading">
+        <h2
+          id="resume-heading"
+          class="text-sm font-bold tracking-widest text-slate-900 dark:text-slate-200 uppercase border-b border-slate-200 pb-4 dark:border-white/10 mb-6"
+        >
+          Resume
+        </h2>
+        <a
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50 hover:text-slate-900 hover:shadow-md active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white shadow-sm"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="transition-transform group-hover:-translate-y-0.5"
+            ><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+            ></path><polyline points="7 10 12 15 17 10"></polyline><line
+              x1="12"
+              x2="12"
+              y1="15"
+              y2="3"></line>
+          </svg>
+          Download Resume (PDF)
+        </a>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

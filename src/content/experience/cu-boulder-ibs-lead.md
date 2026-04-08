@@ -3,6 +3,7 @@ organization: 'University of Colorado Boulder - Institute of Behavioral Science'
 title: 'Lead Technical Research Assistant'
 period: 'March 2023 – May 2025'
 order: 4
+logo: '/logos/cu-boulder.png'
 ---
 
 - **Computer Vision Pipeline (PyTorch/ResNet50):** Collaborated with PhD researchers in weekly Agile sprints to architect a visual bias analysis pipeline for NYT COVID-19 imagery. Engineered a custom preprocessing workflow using OpenCV and Scikit-image to perform Z-score normalization and channel-wise intensity rescaling

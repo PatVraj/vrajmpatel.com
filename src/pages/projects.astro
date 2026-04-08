@@ -12,59 +12,35 @@ const projectRendered = await Promise.all(
 	}),
 );
 
-// Group projects by domain
-const groupedProjects = projectRendered.reduce((acc, { entry, Content }) => {
-	const domain = entry.data.domain;
-	if (!acc[domain]) acc[domain] = [];
-	acc[domain].push({ entry, Content });
-	return acc;
-}, {} as Record<string, typeof projectRendered>);
-
-// Sort each group by order
-Object.keys(groupedProjects).forEach((domain) => {
-	groupedProjects[domain].sort((a, b) => (a.entry.data.order ?? 99) - (b.entry.data.order ?? 99));
+// Sort all projects by order (featured first, then by order number)
+const sortedProjects = projectRendered.sort((a, b) => {
+	const aFeatured = a.entry.data.featured ? 0 : 1;
+	const bFeatured = b.entry.data.featured ? 0 : 1;
+	if (aFeatured !== bFeatured) return aFeatured - bFeatured;
+	return (a.entry.data.order ?? 99) - (b.entry.data.order ?? 99);
 });
-
-// Domain order
-const domains = ['Machine Learning', 'Systems Infrastructure', 'Software Engineering', 'Research'];
 ---
 
 <BaseLayout
 	title="Projects — Vraj Patel"
-	description="Projects in machine learning, systems, software engineering, and research — Vraj Patel."
+	description="Projects in machine learning, backend systems, infrastructure, and research — Vraj Patel."
 >
 	<div class="mb-16 border-b border-slate-200 pb-8 dark:border-white/10">
 		<h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">Projects</h1>
 		<p class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-400">
-			Full catalog, grouped by area. Each card links out to code, papers, or notebooks when available.
+			A mix of production systems, research, and side projects. Click any card for the full technical detail.
 		</p>
 	</div>
 
-	<div class="flex flex-col gap-20">
+	<div class="grid gap-6 sm:grid-cols-2">
 		{
-			domains.map((domain) => {
-				const domainProjects = groupedProjects[domain] || [];
-				if (domainProjects.length === 0) return null;
-				const sectionId = domain.toLowerCase().replace(/\s+/g, '-');
-
-				return (
-					<section aria-labelledby={sectionId}>
-						<h2 id={sectionId} class="mb-6 text-xl font-bold text-slate-900 dark:text-slate-200">
-							{domain}
-						</h2>
-						
-						<div class="grid gap-6 sm:grid-cols-2">
-							{domainProjects.map(({ entry, Content }, index) => (
-								<div class="animate-fade-in-up" style={`animation-delay: ${index * 0.1}s;`}>
-									<ProjectCard entry={entry} showDomain={false}>
-										<Content />
-									</ProjectCard>
-								</div>
-							))}
-						</div>
-					</section>
-				);
-			})
+			sortedProjects.map(({ entry, Content }, index) => (
+				<div class="animate-fade-in-up" style={`animation-delay: ${index * 0.05}s;`}>
+					<ProjectCard entry={entry} showDomain={true}>
+						<Content />
+					</ProjectCard>
+				</div>
+			))
 		}
 	</div>
 </BaseLayout>

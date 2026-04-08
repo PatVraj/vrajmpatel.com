@@ -7,10 +7,34 @@ interface Props {
 }
 
 const { entry, variant = 'detailed' } = Astro.props;
+const { logo, logoDark, logo2, logo2Dark } = entry.data;
 ---
 
 {variant === 'compact' ? (
-	<article class="group flex flex-col items-start rounded-lg transition-all hover:bg-slate-100/50 dark:hover:bg-white/5 -mx-4 p-4">
+	<article class="group flex items-start gap-4 rounded-lg transition-all hover:bg-slate-100/50 dark:hover:bg-white/5 -mx-4 p-4">
+		{logo && (
+			<div class="relative shrink-0 mt-0.5">
+				<div class="w-10 h-10 relative z-10">
+					{logo2 ? (
+						<>
+							<div class="absolute inset-0 animate-swap-1 flex items-center justify-center">
+								<img src={logo} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
+								<img src={logoDark || logo} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+							</div>
+							<div class="absolute inset-0 animate-swap-2 opacity-0 flex items-center justify-center">
+								<img src={logo2} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
+								<img src={logo2Dark || logo2} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+							</div>
+						</>
+					) : (
+						<div class="w-full h-full flex items-center justify-center">
+							<img src={logo} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
+							<img src={logoDark || logo} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+						</div>
+					)}
+				</div>
+			</div>
+		)}
 		<div class="z-10 w-full">
 			<h3 class="text-base font-semibold text-slate-900 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{entry.data.title}</h3>
 			<p class="mt-1 text-sm text-blue-600 dark:text-blue-400">{entry.data.organization}</p>
@@ -18,18 +42,69 @@ const { entry, variant = 'detailed' } = Astro.props;
 		</div>
 	</article>
 ) : (
-	<article class="relative group">
-		<span class="absolute -left-[31px] sm:-left-[39px] top-1.5 h-3 w-3 rounded-full border border-blue-500 bg-white dark:bg-slate-950 ring-4 ring-slate-50 dark:ring-slate-950 transition-transform duration-300 group-hover:scale-125 group-hover:bg-blue-500"></span>
+	<article class="group">
+		<div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+			{logo ? (
+				<div class="relative shrink-0 self-start sm:self-auto">
+					<div class="w-16 h-16 sm:w-24 sm:h-24 relative z-10">
+						{logo2 ? (
+							<>
+								<div class="absolute inset-0 animate-swap-1 flex items-center justify-center">
+									<img src={logo} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
+									<img src={logoDark || logo} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+								</div>
+								<div class="absolute inset-0 animate-swap-2 opacity-0 flex items-center justify-center">
+									<img src={logo2} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
+									<img src={logo2Dark || logo2} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+								</div>
+							</>
+						) : (
+							<div class="w-full h-full flex items-center justify-center">
+								<img src={logo} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
+								<img src={logoDark || logo} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+							</div>
+						)}
+					</div>
+				</div>
+			) : (
+				<div class="relative shrink-0 w-16 sm:w-24 hidden sm:block"></div>
+			)}
 		
-		<div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-			<h2 class="text-xl font-bold text-slate-900 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{entry.data.title}</h2>
-			<span class="text-sm font-medium text-slate-500 dark:text-slate-400 sm:text-right">{entry.data.period}</span>
+			<div class="flex-grow min-w-0 w-full">
+				<div class="flex flex-col lg:flex-row lg:items-baseline lg:justify-between lg:gap-4">
+					<h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{entry.data.title}</h2>
+					<span class="text-sm font-medium text-slate-500 dark:text-slate-400 lg:text-right shrink-0 mt-1 lg:mt-0">{entry.data.period}</span>
+				</div>
+		
+				<p class="mt-1 text-base sm:text-lg font-medium text-blue-600 dark:text-blue-400">{entry.data.organization}</p>
+			</div>
 		</div>
-		
-		<p class="mt-1 text-base font-medium text-blue-600 dark:text-blue-400">{entry.data.organization}</p>
-		
-		<div class="mt-4 text-sm leading-relaxed text-slate-700 dark:text-slate-400 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3 [&_li]:mb-1 [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-800 dark:[&_a]:text-blue-400 dark:hover:[&_a]:text-blue-300">
+	
+		<!-- Description wraps below logo on mobile, aligns right of logo on desktop -->
+		<div class="mt-4 sm:ml-[7.5rem] text-sm leading-relaxed text-slate-700 dark:text-slate-400 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3 [&_li]:mb-1 [&_a]:text-blue-600 [&_a]:underline hover:[&_a]:text-blue-800 dark:[&_a]:text-blue-400 dark:hover:[&_a]:text-blue-300">
 			<slot />
 		</div>
 	</article>
 )}
+
+<style>
+@keyframes logoSwap {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes logoSwapReverse {
+  0%, 45% { opacity: 0; }
+  50%, 95% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.animate-swap-1 {
+  animation: logoSwap 8s ease-in-out infinite;
+}
+
+.animate-swap-2 {
+  animation: logoSwapReverse 8s ease-in-out infinite;
+}
+</style>

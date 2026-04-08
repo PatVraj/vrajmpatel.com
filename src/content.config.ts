@@ -8,6 +8,11 @@ const experience = defineCollection({
 		title: z.string(),
 		period: z.string(),
 		order: z.number(),
+		location: z.string().optional(),
+		logo: z.string().optional(),
+		logoDark: z.string().optional(),
+		logo2: z.string().optional(),
+		logo2Dark: z.string().optional(),
 	}),
 });
 
@@ -29,6 +34,8 @@ const projects = defineCollection({
 		paper: z.string().optional(),
 		notebook: z.string().url().optional(),
 		privateRepo: z.boolean().optional(),
+		tags: z.array(z.string()).optional(),
+		summary: z.string().optional(),
 	}),
 });
 

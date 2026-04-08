@@ -3,6 +3,7 @@ organization: 'University of Colorado Boulder - Institute of Behavioral Science'
 title: 'Systems Integration Engineer'
 period: 'May 2025 – Present'
 order: 2
+logo: '/logos/cu-boulder.png'
 ---
 
 - Developing a full-stack ticket classification system using FastAPI and PostgreSQL, architecting a microservices based solution to automate incident tagging via a fine-tuned BERT transformer model
