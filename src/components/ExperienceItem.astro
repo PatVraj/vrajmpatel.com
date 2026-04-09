@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 
 interface Props {
 	entry: CollectionEntry<'experience'>;
@@ -18,18 +19,18 @@ const { logo, logoDark, logo2, logo2Dark } = entry.data;
 					{logo2 ? (
 						<>
 							<div class="absolute inset-0 animate-swap-1 flex items-center justify-center">
-								<img src={logo} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
-								<img src={logoDark || logo} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+								<Image src={logo} alt="" width={96} height={96} class="w-full h-full object-contain dark:hidden" loading="lazy" />
+								<Image src={logoDark || logo} alt="" width={96} height={96} class="w-full h-full object-contain hidden dark:block" loading="lazy" />
 							</div>
 							<div class="absolute inset-0 animate-swap-2 opacity-0 flex items-center justify-center">
-								<img src={logo2} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
-								<img src={logo2Dark || logo2} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+								<Image src={logo2} alt="" width={96} height={96} class="w-full h-full object-contain dark:hidden" loading="lazy" />
+								<Image src={logo2Dark || logo2} alt="" width={96} height={96} class="w-full h-full object-contain hidden dark:block" loading="lazy" />
 							</div>
 						</>
 					) : (
 						<div class="w-full h-full flex items-center justify-center">
-							<img src={logo} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
-							<img src={logoDark || logo} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+							<Image src={logo} alt="" width={96} height={96} class="w-full h-full object-contain dark:hidden" loading="lazy" />
+							<Image src={logoDark || logo} alt="" width={96} height={96} class="w-full h-full object-contain hidden dark:block" loading="lazy" />
 						</div>
 					)}
 				</div>
@@ -50,18 +51,18 @@ const { logo, logoDark, logo2, logo2Dark } = entry.data;
 						{logo2 ? (
 							<>
 								<div class="absolute inset-0 animate-swap-1 flex items-center justify-center">
-									<img src={logo} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
-									<img src={logoDark || logo} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+									<Image src={logo} alt="" width={96} height={96} class="w-full h-full object-contain dark:hidden" loading="lazy" />
+									<Image src={logoDark || logo} alt="" width={96} height={96} class="w-full h-full object-contain hidden dark:block" loading="lazy" />
 								</div>
 								<div class="absolute inset-0 animate-swap-2 opacity-0 flex items-center justify-center">
-									<img src={logo2} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
-									<img src={logo2Dark || logo2} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+									<Image src={logo2} alt="" width={96} height={96} class="w-full h-full object-contain dark:hidden" loading="lazy" />
+									<Image src={logo2Dark || logo2} alt="" width={96} height={96} class="w-full h-full object-contain hidden dark:block" loading="lazy" />
 								</div>
 							</>
 						) : (
 							<div class="w-full h-full flex items-center justify-center">
-								<img src={logo} alt="" class="w-full h-full object-contain dark:hidden" loading="lazy" />
-								<img src={logoDark || logo} alt="" class="w-full h-full object-contain hidden dark:block" loading="lazy" />
+								<Image src={logo} alt="" width={96} height={96} class="w-full h-full object-contain dark:hidden" loading="lazy" />
+								<Image src={logoDark || logo} alt="" width={96} height={96} class="w-full h-full object-contain hidden dark:block" loading="lazy" />
 							</div>
 						)}
 					</div>

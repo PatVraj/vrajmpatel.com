@@ -7,11 +7,15 @@ import Tracker from "../components/Tracker.astro";
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
+  schemaType?: string;
 }
 
 const {
   title = "Vraj Patel",
   description = "Systems Integration Engineer specializing in ML & Backend Systems. M.S. Computer Science (AI) at CU Boulder.",
+  ogImage = "/profile.jpg",
+  schemaType = "Person",
 } = Astro.props;
 
 const nav = [
@@ -51,12 +55,12 @@ const nav = [
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:site_name" content="Vraj Patel Portfolio" />
-    <meta property="og:image" content={new URL("/profile.jpg", Astro.site)} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL("/profile.jpg", Astro.site)} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
 
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     <link rel="sitemap" href="/sitemap-index.xml" />
@@ -72,9 +76,9 @@ const nav = [
       type="application/ld+json"
       set:html={JSON.stringify({
         "@context": "https://schema.org",
-        "@type": "Person",
-        name: "Vraj Patel",
-        jobTitle: "Systems Integration Engineer — ML & Backend Systems",
+        "@type": schemaType,
+        name: title !== "Vraj Patel" ? title : "Vraj Patel",
+        jobTitle: schemaType === "Person" ? "Systems Integration Engineer — ML & Backend Systems" : undefined,
         url: "https://www.vrajmpatel.com",
         alumniOf: [
           {
