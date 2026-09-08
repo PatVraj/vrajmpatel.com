@@ -1,4 +1,12 @@
 export type GitHubAccountKey = "personal" | "academic";
+export type GitHubActivityAccountSource =
+  | "github-graphql"
+  | "verified-snapshot-fallback"
+  | "checked-in-baseline";
+export type GitHubActivitySource =
+  | "github-graphql"
+  | "github-graphql-with-verified-account-fallback"
+  | "checked-in-baseline";
 
 export interface GitHubActivityAccount {
   key: GitHubAccountKey;
@@ -6,6 +14,8 @@ export interface GitHubActivityAccount {
   login: string;
   url: `https://github.com/${string}`;
   totalContributions: number;
+  source: GitHubActivityAccountSource;
+  verifiedAt: string;
 }
 
 export interface GitHubActivityDay {
@@ -18,9 +28,9 @@ export interface GitHubActivityDay {
 }
 
 export interface GitHubActivityData {
-  schemaVersion: 1;
-  generatedAt: string;
-  source: string;
+  schemaVersion: 2;
+  refreshedAt: string;
+  source: GitHubActivitySource;
   range: {
     from: string;
     to: string;
@@ -36,6 +46,31 @@ export const activityPalettes = {
 } as const;
 
 const accountKeys = new Set<GitHubAccountKey>(["personal", "academic"]);
+const accountSources = new Set<GitHubActivityAccountSource>([
+  "github-graphql",
+  "verified-snapshot-fallback",
+  "checked-in-baseline",
+]);
+const activitySources = new Set<GitHubActivitySource>([
+  "github-graphql",
+  "github-graphql-with-verified-account-fallback",
+  "checked-in-baseline",
+]);
+const accountContract: Record<
+  GitHubAccountKey,
+  Pick<GitHubActivityAccount, "label" | "login" | "url">
+> = {
+  personal: {
+    label: "Personal",
+    login: "basechildren",
+    url: "https://github.com/basechildren",
+  },
+  academic: {
+    label: "Academic",
+    login: "PatVraj",
+    url: "https://github.com/PatVraj",
+  },
+};
 
 const isIntegerAtLeastZero = (value: unknown): value is number =>
   Number.isInteger(value) && Number(value) >= 0;
@@ -43,17 +78,39 @@ const isIntegerAtLeastZero = (value: unknown): value is number =>
 const isLevel = (value: unknown): value is number =>
   Number.isInteger(value) && Number(value) >= 0 && Number(value) <= 4;
 
+const isDateOnly = (value: unknown): value is string => {
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
+  }
+
+  const date = new Date(`${value}T00:00:00.000Z`);
+  return !Number.isNaN(date.valueOf()) && date.toISOString().startsWith(value);
+};
+
+const isIsoTimestamp = (value: unknown): value is string => {
+  if (typeof value !== "string") return false;
+
+  const date = new Date(value);
+  return !Number.isNaN(date.valueOf()) && date.toISOString() === value;
+};
+
+const followsDay = (previous: string, next: string) => {
+  const expected = new Date(`${previous}T00:00:00.000Z`);
+  expected.setUTCDate(expected.getUTCDate() + 1);
+  return expected.toISOString().slice(0, 10) === next;
+};
+
 export function isGitHubActivityData(value: unknown): value is GitHubActivityData {
   if (!value || typeof value !== "object") return false;
 
   const data = value as Partial<GitHubActivityData>;
   if (
-    data.schemaVersion !== 1 ||
-    typeof data.generatedAt !== "string" ||
-    typeof data.source !== "string" ||
+    data.schemaVersion !== 2 ||
+    !isIsoTimestamp(data.refreshedAt) ||
+    !activitySources.has(data.source as GitHubActivitySource) ||
     !data.range ||
-    typeof data.range.from !== "string" ||
-    typeof data.range.to !== "string" ||
+    !isDateOnly(data.range.from) ||
+    !isDateOnly(data.range.to) ||
     !Array.isArray(data.accounts) ||
     data.accounts.length !== 2 ||
     !isIntegerAtLeastZero(data.totalContributions) ||
@@ -64,30 +121,64 @@ export function isGitHubActivityData(value: unknown): value is GitHubActivityDat
     return false;
   }
 
-  const validAccounts = data.accounts.every(
-    (account) =>
-      account &&
-      accountKeys.has(account.key) &&
-      typeof account.label === "string" &&
-      typeof account.login === "string" &&
-      typeof account.url === "string" &&
-      account.url === `https://github.com/${account.login}` &&
-      isIntegerAtLeastZero(account.totalContributions),
+  const accounts = data.accounts;
+  const days = data.days;
+  if (!accounts || !days) return false;
+
+  const validAccounts = accounts.every(
+    (account) => {
+      if (!account || !accountKeys.has(account.key)) return false;
+
+      const expected = accountContract[account.key];
+      return (
+        account.label === expected.label &&
+        account.login === expected.login &&
+        account.url === expected.url &&
+        isIntegerAtLeastZero(account.totalContributions) &&
+        accountSources.has(account.source) &&
+        isIsoTimestamp(account.verifiedAt)
+      );
+    },
   );
-  if (!validAccounts || new Set(data.accounts.map(({ key }) => key)).size !== 2) {
+  if (!validAccounts || new Set(accounts.map(({ key }) => key)).size !== 2) {
     return false;
   }
 
-  return data.days.every(
+  const validDays = days.every(
     (day) =>
       day &&
-      /^\d{4}-\d{2}-\d{2}$/.test(day.date) &&
+      isDateOnly(day.date) &&
       isIntegerAtLeastZero(day.personalCount) &&
       isLevel(day.personalLevel) &&
       isIntegerAtLeastZero(day.academicCount) &&
       isLevel(day.academicLevel) &&
       isIntegerAtLeastZero(day.total) &&
       day.total === day.personalCount + day.academicCount,
+  );
+  if (!validDays) return false;
+
+  if (
+    data.range.from !== days[0]?.date ||
+    data.range.to !== days.at(-1)?.date ||
+    !days.slice(1).every((day, index) => followsDay(days[index].date, day.date))
+  ) {
+    return false;
+  }
+
+  const personalTotal = days.reduce(
+    (total, day) => total + day.personalCount,
+    0,
+  );
+  const academicTotal = days.reduce(
+    (total, day) => total + day.academicCount,
+    0,
+  );
+  const accountsByKey = new Map(accounts.map((account) => [account.key, account]));
+
+  return (
+    accountsByKey.get("personal")?.totalContributions === personalTotal &&
+    accountsByKey.get("academic")?.totalContributions === academicTotal &&
+    data.totalContributions === personalTotal + academicTotal
   );
 }
 

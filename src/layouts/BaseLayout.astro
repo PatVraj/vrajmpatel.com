@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import Motion from "../components/Motion.astro";
 import ThemeToggle from "../components/ThemeToggle.astro";
 import Tracker from "../components/Tracker.astro";
 import { profile } from "../data/profile";
@@ -27,9 +28,10 @@ const nav = [
   { href: "/projects", label: "Work" },
   { href: "/experience", label: "Experience" },
   { href: "/about", label: "About" },
+  { href: "/about#contact", label: "Contact" },
 ] as const;
 
-const isCurrent = (href: string) => Astro.url.pathname.startsWith(href);
+const isCurrent = (href: string) => !href.includes("#") && Astro.url.pathname.startsWith(href);
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 const imageUrl = new URL(ogImage, Astro.site);
 const person = {
@@ -124,6 +126,7 @@ const structuredData =
         document.documentElement.style.colorScheme = isDark ? "dark" : "light";
       })();
     </script>
+    <Motion />
     <Tracker
       projectKey={import.meta.env.PUBLIC_POSTHOG_KEY}
       apiHost={import.meta.env.PUBLIC_POSTHOG_HOST}
@@ -153,7 +156,7 @@ const structuredData =
         </a>
 
         <div class="flex items-center gap-2 sm:gap-5">
-          <nav aria-label="Primary" class="hidden items-center gap-5 sm:flex">
+          <nav aria-label="Primary" class="hidden items-center gap-5 md:flex">
             {
               nav.map(({ href, label }) => (
                 <a
@@ -178,13 +181,13 @@ const structuredData =
               data-ph-placement="header"
               class="inline-flex min-h-11 items-center text-sm text-slate-600 underline decoration-slate-300 underline-offset-4 transition-colors hover:text-slate-950 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-slate-400 dark:decoration-slate-700 dark:hover:text-white"
             >
-              Resume
+              Resume (PDF)
             </a>
           </nav>
 
           <ThemeToggle />
 
-          <details data-mobile-menu class="group sm:hidden">
+          <details data-mobile-menu class="group md:hidden">
             <summary
               class="inline-flex min-h-11 min-w-16 touch-manipulation cursor-pointer list-none items-center justify-center rounded-md border border-slate-300 px-3 text-sm font-medium text-slate-700 transition-[background-color,border-color,color,transform] hover:border-slate-400 hover:bg-slate-100 active:scale-[0.97] active:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 group-open:border-slate-400 group-open:bg-slate-100 [&::-webkit-details-marker]:hidden dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-900 dark:active:bg-slate-800 dark:group-open:border-slate-600 dark:group-open:bg-slate-900"
             >
@@ -219,7 +222,7 @@ const structuredData =
                   data-ph-placement="mobile_menu"
                   class="flex min-h-11 touch-manipulation items-center rounded-lg px-4 text-base text-slate-700 transition-[background-color,color,transform] hover:bg-slate-100 hover:text-slate-950 active:scale-[0.99] active:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white dark:active:bg-slate-800"
                 >
-                  Resume
+                  Resume (PDF)
                 </a>
               </div>
             </nav>
@@ -251,7 +254,7 @@ const structuredData =
             data-ph-event="social_profile_clicked"
             data-ph-network="linkedin"
             class="inline-flex min-h-11 items-center underline decoration-slate-300 underline-offset-4 hover:text-slate-950 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:decoration-slate-700 dark:hover:text-white"
-          >LinkedIn</a>
+          >Contact on LinkedIn</a>
           {
             profile.githubProfiles.map(({ href, label, username }) => (
               <a

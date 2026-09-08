@@ -5,191 +5,64 @@ import ExperienceItem from "../components/ExperienceItem.astro";
 import ProofGrid from "../components/ProofGrid.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import { profile } from "../data/profile";
-import { capabilities, proofPoints } from "../data/recruiter";
-import { isCaseStudy, isPublicProject, sortProjects } from "../lib/projects";
+import ContactBlock from "../components/ContactBlock.astro";
+import { proofPoints } from "../data/recruiter";
+import {
+  isCaseStudy,
+  isPublicExperience,
+  isPublicProject,
+  sortProjects,
+} from "../lib/projects";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const featured = (await getCollection("projects", ({ data }) => data.featured))
   .filter(isPublicProject)
   .filter(isCaseStudy)
   .sort(sortProjects)
-  .slice(0, 2);
+  .slice(0, 3);
 
 const recentExperience = (await getCollection("experience"))
+  .filter(isPublicExperience)
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 4);
 ---
-
-<BaseLayout
-  title="Vraj Patel — Systems Integration Engineer"
-  description="Systems integration engineer building reliable backend services, data pipelines, and applied machine-learning systems at CU Boulder."
-  schemaType="Person"
->
-  <section
-    class="grid grid-cols-[1fr_6rem] items-start gap-x-5 gap-y-6 sm:grid-cols-[1fr_11rem] sm:gap-x-14 sm:gap-y-0"
-    aria-labelledby="intro-heading"
-  >
-    <div class="min-w-0">
-      <p class="font-mono text-xs text-slate-500 dark:text-slate-400">
-        {profile.role} · {profile.location}
-      </p>
-      <h1
-        id="intro-heading"
-        class="mt-4 text-4xl font-semibold tracking-[-0.04em] text-slate-950 dark:text-white sm:text-6xl"
-      >
-        {profile.name}
-      </h1>
+<BaseLayout title="Vraj Patel — Systems Integration Engineer" description="Backend services, data pipelines, and applied ML systems built by Vraj Patel at CU Boulder." schemaType="Person">
+  <section class="home-intro" aria-labelledby="intro-heading">
+    <div>
+      <p class="eyebrow">{profile.role} · {profile.location}</p>
+      <h1 id="intro-heading" class="home-name" data-intro>{profile.name}</h1>
     </div>
-
-    <Image
-      src="/profile.jpg"
-      alt="Portrait of Vraj Patel"
-      width={176}
-      height={208}
-      class="col-start-2 row-start-1 h-28 w-24 rounded-lg object-cover object-center sm:row-span-2 sm:h-52 sm:w-44"
-      fetchpriority="high"
-      loading="eager"
-    />
-
-    <div class="col-span-2 sm:col-span-1 sm:col-start-1 sm:row-start-2">
-      <p
-        class="max-w-2xl text-2xl font-medium leading-tight tracking-[-0.025em] text-slate-800 dark:text-slate-200 sm:mt-5 sm:text-3xl"
-      >
-        I turn operational bottlenecks into reliable software and data systems.
-      </p>
-      <p class="mt-6 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-400 sm:text-lg">
-        At CU Boulder’s Institute of Behavioral Science, I build backend services,
-        automation, operational analytics, and ML-assisted workflows designed for
-        day-to-day use. My research background spans public-interest data and
-        satellite cybersecurity.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm font-medium max-[359px]:grid max-[359px]:grid-cols-2 max-[359px]:gap-x-4 max-[359px]:gap-y-1">
-        <a
-          href="/brief"
-          data-ph-event="recruiter_brief_opened"
-          data-ph-placement="hero"
-          class="inline-flex min-h-11 items-center rounded-md bg-slate-950 px-4 text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 max-[359px]:col-span-2 max-[359px]:justify-center dark:bg-white dark:text-slate-950 dark:hover:bg-blue-200 dark:focus-visible:ring-offset-slate-950"
-        >
-          Recruiter brief
-        </a>
-        <a
-          href="#selected-work"
-          class="inline-flex min-h-11 items-center underline decoration-slate-300 underline-offset-4 hover:text-blue-700 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:decoration-slate-700 dark:hover:text-blue-400"
-        >
-          Selected work
-        </a>
-        <a
-          href="/resume.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-ph-event="resume_clicked"
-          data-ph-placement="hero"
-          class="inline-flex min-h-11 items-center underline decoration-slate-300 underline-offset-4 hover:text-blue-700 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:decoration-slate-700 dark:hover:text-blue-400"
-        >
-          Resume
-        </a>
-      </div>
+    <Image src="/profile.jpg" alt="Portrait of Vraj Patel" width={176} height={208} class="home-portrait" fetchpriority="high" loading="eager" />
+    <div class="home-intro-copy">
+      <p class="home-statement" data-intro>I build backend services, data pipelines, and tools for support operations.</p>
+      <p class="muted-copy">At CU Boulder’s Institute of Behavioral Science. My work connects Python, SQL, applied ML, and the people who use the results.</p>
+      <nav class="action-row" aria-label="Explore my work">
+        <a href="#selected-work" class="button-primary">Explore the work</a>
+        <a href="/brief" class="text-link" data-ph-event="recruiter_brief_opened" data-ph-placement="hero">Recruiter brief</a>
+        <a href="#contact" class="text-link">Contact</a>
+      </nav>
     </div>
   </section>
 
-  <section class="border-b border-slate-200 pb-12 pt-10 sm:pb-20 sm:pt-14 dark:border-slate-800" aria-labelledby="proof-heading">
-    <p id="proof-heading" class="mb-4 font-mono text-xs text-slate-500 dark:text-slate-400 sm:mb-5">
-      Evidence at a glance
-    </p>
-    <ProofGrid items={proofPoints} />
+  <section id="selected-work" class="page-section" aria-labelledby="work-heading">
+    <div class="section-heading" data-reveal>
+      <div><p class="eyebrow">Selected work</p><h2 id="work-heading" class="section-title">Three systems. Different problems.</h2></div>
+      <a href="/projects" class="text-link">All case studies</a>
+    </div>
+    <div class="mt-6">{featured.map(entry => <ProjectCard entry={entry} headingLevel="h3" variant="compact" />)}</div>
   </section>
 
-  <section class="pt-12 sm:pt-20" aria-labelledby="capabilities-heading">
-    <div class="max-w-3xl">
-      <p class="font-mono text-xs text-slate-500 dark:text-slate-400">How I contribute</p>
-      <h2 id="capabilities-heading" class="mt-2 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-3xl">
-        Engineering range, backed by specific work
-      </h2>
-      <p class="mt-3 text-base leading-7 text-slate-600 dark:text-slate-400">
-        I work across systems integration, backend engineering, automation, and
-        applied ML, with an emphasis on explicit state, review boundaries, and
-        recovery when a long-running job fails.
-      </p>
-    </div>
-
-    <div class="mt-7 border-y border-slate-200 dark:border-slate-800 sm:mt-8">
-      {
-        capabilities.map((capability, index) => (
-          <article class:list={["grid gap-3 py-6 md:grid-cols-[15rem_1fr] md:gap-10 md:py-7", index > 0 && "border-t border-slate-200 dark:border-slate-800"]}>
-            <h3 class="text-lg font-semibold leading-7 text-slate-950 dark:text-white">
-              {capability.title}
-            </h3>
-            <div>
-              <p class="max-w-2xl text-[0.95rem] leading-7 text-slate-600 dark:text-slate-400">
-                {capability.summary}
-              </p>
-              <p class="mt-3 font-mono text-xs leading-5 text-slate-500 dark:text-slate-400">
-                {capability.evidence}
-              </p>
-              <a
-                href={capability.href}
-                class="mt-2 inline-flex min-h-11 items-center text-sm font-medium underline decoration-slate-300 underline-offset-4 hover:text-blue-700 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:decoration-slate-700 dark:hover:text-blue-400 sm:mt-4"
-              >
-                {capability.linkLabel}
-              </a>
-            </div>
-          </article>
-        ))
-      }
-    </div>
+  <section class="page-section" aria-labelledby="proof-heading">
+    <div data-reveal><p class="eyebrow">Evidence at a glance</p><h2 id="proof-heading" class="section-title">Results with context.</h2></div>
+    <ProofGrid items={proofPoints} class="mt-6" />
   </section>
 
-  <section id="selected-work" class="scroll-mt-24 pt-12 sm:pt-20" aria-labelledby="work-heading">
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <p class="font-mono text-xs text-slate-500 dark:text-slate-400">Projects</p>
-        <h2 id="work-heading" class="mt-2 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-3xl">
-          Selected work
-        </h2>
-        <p class="mt-3 text-base text-slate-600 dark:text-slate-400">
-          Case studies with contribution, constraints, system decisions, and evidence.
-        </p>
-      </div>
-      <a
-        href="/projects"
-        class="inline-flex min-h-11 items-center text-sm font-medium underline decoration-slate-300 underline-offset-4 hover:text-blue-700 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:decoration-slate-700 dark:hover:text-blue-400"
-      >
-        All projects
-      </a>
+  <section class="page-section" aria-labelledby="experience-heading">
+    <div class="section-heading" data-reveal>
+      <div><p class="eyebrow">Career</p><h2 id="experience-heading" class="section-title">Engineering and research.</h2></div>
+      <a href="/experience" class="text-link">Full experience</a>
     </div>
-
-    <div class="mt-8">
-      {
-        featured.map((entry) => (
-          <ProjectCard entry={entry} headingLevel="h3" showDomain={true} variant="compact" />
-        ))
-      }
-    </div>
+    <div class="mt-6">{recentExperience.map(entry => <ExperienceItem entry={entry} variant="compact" />)}</div>
   </section>
-
-  <section class="pt-12 sm:pt-20" aria-labelledby="experience-heading">
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <p class="font-mono text-xs text-slate-500 dark:text-slate-400">Career</p>
-        <h2 id="experience-heading" class="mt-2 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-3xl">
-          Experience
-        </h2>
-      </div>
-      <a
-        href="/experience"
-        class="inline-flex min-h-11 items-center text-sm font-medium underline decoration-slate-300 underline-offset-4 hover:text-blue-700 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:decoration-slate-700 dark:hover:text-blue-400"
-      >
-        Full experience
-      </a>
-    </div>
-
-    <div class="mt-8">
-      {
-        recentExperience.map((entry) => (
-          <ExperienceItem entry={entry} variant="compact" />
-        ))
-      }
-    </div>
-  </section>
-
+  <ContactBlock />
 </BaseLayout>

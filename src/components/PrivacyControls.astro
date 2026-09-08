@@ -9,8 +9,7 @@
     This browser
   </h2>
   <p class="mt-4 text-base leading-8 text-slate-600 dark:text-slate-400 sm:text-lg">
-    Analytics and masked session replay both start on. The status and form
-    below apply to this browser only.
+    Analytics and masked session replay both start on. Choose either independently, then save. These settings apply to this browser only.
   </p>
 
   <dl
@@ -55,7 +54,7 @@
         <span>
           <span class="font-medium text-slate-950 dark:text-white">Analytics</span>
           <span class="mt-0.5 block text-xs leading-5 text-slate-500 dark:text-slate-400">
-            Page views, page leaves, autocapture, heatmaps, web vitals, and dead clicks.
+            Pages you visit and how you interact with the site.
           </span>
         </span>
       </label>
@@ -72,49 +71,28 @@
         <span>
           <span class="font-medium text-slate-950 dark:text-white">Session replay</span>
           <span class="mt-0.5 block text-xs leading-5 text-slate-500 dark:text-slate-400">
-            Masked recordings of this visit. Inputs, email, password, and textarea fields are masked.
+            A replay of your visit with form inputs hidden.
           </span>
         </span>
       </label>
     </fieldset>
-
-    <div class="max-w-sm">
-      <label
-        for="consent-confirm"
-        class="block text-sm font-medium text-slate-800 dark:text-slate-200"
-      >
-        Type <span class="font-mono font-normal">opt out</span> before saving
-        any off choice
-      </label>
-      <input
-        id="consent-confirm"
-        name="confirmation"
-        type="text"
-        data-consent-confirm
-        autocomplete="off"
-        spellcheck="false"
-        class="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
-      />
-      <p class="mt-1.5 text-xs leading-5 text-slate-500 dark:text-slate-400">
-        Turning analytics or replay back on does not need that phrase.
-      </p>
-    </div>
 
     <p
       class="hidden text-sm text-red-700 dark:text-red-400"
       data-consent-error
       role="alert"
     >
-      Type opt out to save an off choice.
+      Your browser could not save these preferences. Allow local storage for this site and try again.
     </p>
 
     <div>
       <button
         type="submit"
         data-consent-save
+        disabled
         class="inline-flex min-h-10 items-center rounded-md bg-slate-950 px-3.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-slate-950 dark:hover:bg-blue-200 dark:focus-visible:ring-offset-slate-950"
       >
-        Save
+        Save preferences
       </button>
     </div>
 
@@ -123,16 +101,16 @@
       data-consent-saved
       role="status"
     >
-      Saved for this browser only. This is not a global suppression.
+      Saved for this browser only. Other browsers and devices keep their own preferences.
     </p>
   </form>
+  <noscript><p class="mt-4 text-sm">Enable JavaScript to save analytics and replay preferences in this browser.</p></noscript>
 </section>
 
 <script>
   import {
     CONSENT_CHANGE_EVENT,
     CONSENT_STORAGE_KEY,
-    canApplyConsentChange,
     defaultConsent,
     parseStoredConsent,
     serializeConsent,
@@ -149,9 +127,6 @@
     const replayInput = document.querySelector<HTMLInputElement>(
       "[data-consent-replay]",
     );
-    const confirmationInput = document.querySelector<HTMLInputElement>(
-      "[data-consent-confirm]",
-    );
     const error = document.querySelector<HTMLElement>("[data-consent-error]");
     const saved = document.querySelector<HTMLElement>("[data-consent-saved]");
     const analyticsStatus = document.querySelector<HTMLElement>(
@@ -165,7 +140,6 @@
       !form ||
       !analyticsInput ||
       !replayInput ||
-      !confirmationInput ||
       !error ||
       !saved ||
       !analyticsStatus ||
@@ -177,9 +151,10 @@
     if (form.dataset.consentReady === "true") return;
     form.dataset.consentReady = "true";
 
-    const readConsent = () =>
-      parseStoredConsent(localStorage.getItem(CONSENT_STORAGE_KEY)) ??
-      defaultConsent();
+    const readConsent = () => {
+      try { return parseStoredConsent(localStorage.getItem(CONSENT_STORAGE_KEY)) ?? defaultConsent(); }
+      catch { return defaultConsent(); }
+    };
 
     const syncStatus = (consent: PostHogConsent) => {
       analyticsStatus.textContent = statusLabel(consent.analytics);
@@ -199,7 +174,6 @@
         }),
       );
       syncStatus(consent);
-      confirmationInput.value = "";
       error.classList.add("hidden");
       saved.classList.remove("hidden");
     };
@@ -208,22 +182,26 @@
     syncInputs(stored);
     syncStatus(stored);
 
+    form.addEventListener("change", () => {
+      saved.classList.add("hidden");
+      error.classList.add("hidden");
+    });
+    const saveButton = form.querySelector<HTMLButtonElement>("[data-consent-save]");
+    if (saveButton) saveButton.disabled = false;
+
     form.addEventListener("submit", (event) => {
       event.preventDefault();
-      const previous = readConsent();
       const next: PostHogConsent = {
         analytics: analyticsInput.checked,
         replay: replayInput.checked,
       };
 
-      if (!canApplyConsentChange(previous, next, confirmationInput.value)) {
+      try {
+        persistAndNotify(next);
+      } catch {
         error.classList.remove("hidden");
         saved.classList.add("hidden");
-        confirmationInput.focus();
-        return;
       }
-
-      persistAndNotify(next);
     });
   };
 

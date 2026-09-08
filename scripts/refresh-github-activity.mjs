@@ -1,5 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
+import { isGitHubActivityData } from "../src/lib/githubActivity.ts";
 
 const GITHUB_GRAPHQL_URL = "https://api.github.com/graphql";
 const SNAPSHOT_PATH = new URL("../src/data/githubActivitySnapshot.json", import.meta.url);
@@ -138,17 +139,20 @@ export function normalizeGitHubActivity(payload, generatedAt = new Date()) {
     };
   });
 
+  const refreshedAt = generatedAt.toISOString();
   const accountData = accounts.map((account) => ({
     ...account,
     totalContributions:
       account.key === "personal"
         ? personal.totalContributions
         : academic.totalContributions,
+    source: "github-graphql",
+    verifiedAt: refreshedAt,
   }));
 
-  return {
-    schemaVersion: 1,
-    generatedAt: generatedAt.toISOString(),
+  const activity = {
+    schemaVersion: 2,
+    refreshedAt,
     source: "github-graphql",
     range: { from: dates[0], to: dates.at(-1) },
     accounts: accountData,
@@ -158,9 +162,19 @@ export function normalizeGitHubActivity(payload, generatedAt = new Date()) {
     ),
     days,
   };
+
+  if (!isGitHubActivityData(activity)) {
+    throw new Error("GitHub returned an invalid normalized activity snapshot");
+  }
+
+  return activity;
 }
 
 export function mergeWithVerifiedSnapshot(activity, verifiedSnapshot) {
+  if (!isGitHubActivityData(activity)) {
+    throw new Error("The fresh GitHub activity snapshot is invalid");
+  }
+
   const missingAccounts = activity.accounts.filter(
     ({ totalContributions }) => totalContributions === 0,
   );
@@ -168,12 +182,15 @@ export function mergeWithVerifiedSnapshot(activity, verifiedSnapshot) {
   if (missingAccounts.length === accounts.length) {
     throw new Error("GitHub returned zero contributions for every configured account");
   }
-  if (!verifiedSnapshot || !Array.isArray(verifiedSnapshot.days)) {
-    throw new Error("A verified GitHub activity snapshot is required for account fallback");
+  if (!isGitHubActivityData(verifiedSnapshot)) {
+    throw new Error("A valid verified GitHub activity snapshot is required for account fallback");
   }
 
   const verifiedDays = new Map(
     verifiedSnapshot.days.map((day) => [day.date, day]),
+  );
+  const verifiedAccounts = new Map(
+    verifiedSnapshot.accounts.map((account) => [account.key, account]),
   );
   const fallbackKeys = new Set(missingAccounts.map(({ key }) => key));
   const days = activity.days.map((day) => {
@@ -205,6 +222,11 @@ export function mergeWithVerifiedSnapshot(activity, verifiedSnapshot) {
   const accountData = activity.accounts.map((account) => {
     if (!fallbackKeys.has(account.key)) return account;
 
+    const verifiedAccount = verifiedAccounts.get(account.key);
+    if (!verifiedAccount) {
+      throw new Error(`The verified ${account.key} account is missing`);
+    }
+
     const countField = `${account.key}Count`;
     const totalContributions = days.reduce(
       (total, day) => total + day[countField],
@@ -213,10 +235,15 @@ export function mergeWithVerifiedSnapshot(activity, verifiedSnapshot) {
     if (totalContributions === 0) {
       throw new Error(`The verified ${account.key} calendar has no activity in the current window`);
     }
-    return { ...account, totalContributions };
+    return {
+      ...account,
+      totalContributions,
+      source: "verified-snapshot-fallback",
+      verifiedAt: verifiedAccount.verifiedAt,
+    };
   });
 
-  return {
+  const mergedActivity = {
     ...activity,
     source: "github-graphql-with-verified-account-fallback",
     accounts: accountData,
@@ -226,6 +253,12 @@ export function mergeWithVerifiedSnapshot(activity, verifiedSnapshot) {
     ),
     days,
   };
+
+  if (!isGitHubActivityData(mergedActivity)) {
+    throw new Error("The merged GitHub activity snapshot is invalid");
+  }
+
+  return mergedActivity;
 }
 
 export async function fetchGitHubActivity({ token, now = new Date(), fetchImpl = fetch }) {

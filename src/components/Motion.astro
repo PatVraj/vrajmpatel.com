@@ -1,0 +1,16 @@
+<script>
+  import { reveal } from "../lib/motion";
+
+  // Content is always visible. Motion is a one-time enhancement, never a loading gate.
+  document.querySelectorAll<HTMLElement>("[data-intro]").forEach(element => reveal(element, 8));
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        reveal(entry.target as HTMLElement);
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll<HTMLElement>("[data-reveal]").forEach(element => observer.observe(element));
+  }
+</script>

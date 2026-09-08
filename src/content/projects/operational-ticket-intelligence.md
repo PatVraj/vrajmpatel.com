@@ -3,19 +3,20 @@ title: 'Operational Ticket Intelligence'
 domain: 'Software Engineering'
 featured: true
 order: 1
+visibility: 'public'
 privateRepo: true
 tech: ['FastAPI', 'PostgreSQL', 'React', 'TypeScript', 'SQLAlchemy', 'Recharts', 'scikit-learn', 'Docker']
-summary: 'Full-stack support operations combining dependable backend workflows, lifecycle-aware analytics, and advisory routing suggestions.'
-contribution: 'Backend workflows · Integration safety · Operational analytics · Model-release tooling'
+summary: "A support-operations platform for reconciling tickets, reviewing routing suggestions, and understanding workload."
+contribution: "I built backend workflows, integration controls, operational analytics, and model-release tooling."
 setting: 'Internal support operations · CU Boulder IBS'
-status: 'Active development'
+status: "Active development · read-only integration"
 proof:
-  - value: '10,803 / 96.7%'
-    label: 'Current ticket corpus / records carrying support-group IDs'
-  - value: '82.63% / 0.7563'
-    label: 'Sealed-test accuracy / macro-F1 for an unreleased BERT candidate trained on 6,137 tickets'
-  - value: '61% / 66% smaller'
-    label: 'Raw / gzip analytics payload after moving from Plotly to Recharts'
+  - value: "10,803 tickets"
+    label: "Local reconciled corpus on August 27, 2026; 96.7% carried support-group IDs."
+  - value: "82.63% accuracy"
+    label: "Sealed-test result for an unreleased BERT candidate; macro-F1 0.7563. Not a production result."
+  - value: "61% smaller payload"
+    label: "Raw analytics visualization payload after replacing Plotly; 66% smaller with gzip."
 systemPath:
   - title: 'Source reconciliation'
     purpose: 'Support-ticket changes enter one consistent intake and update path.'
@@ -32,29 +33,29 @@ systemPath:
   - title: 'Operator surface'
     purpose: 'React views connect monitoring, labeling, and operational patterns for day-to-day decisions.'
     technical: 'Lifecycle-aware analytics distinguish intake from reportable volume. Replacing Plotly with Recharts and accessible chart tables reduced the visualization payload from about 1.07 MB to 415 KB raw and from 361 KB to 123 KB gzip.'
+overview:
+  problem: "Support staff need a consistent view of changing tickets, historical workload, and routing suggestions. Stale records or unreviewed predictions must not trigger external changes."
+  built: "At CU Boulder IBS, I build the FastAPI, PostgreSQL, and React workflows that connect source reconciliation, analytics, model evidence, and staff review. Training and evaluation remain separate from serving."
 ---
 
-## The problem
-
-Support operations combine external ticket state, historical analytics, model predictions, staff decisions, and sometimes outbound changes. A useful platform has to reconcile those pieces without letting stale data or automation outrun operator judgment.
-
-## What I built
-
-At CU Boulder’s Institute of Behavioral Science, my work on an internal FastAPI and PostgreSQL platform spans core backend workflows, integration safety controls, operational analytics, and model-release tooling for a React interface.
-
-The interface brings monitoring, analysis, labeling, and model evidence into one operating surface. Offline training and candidate packaging are separated from serving. When ML is enabled, bounded single-ticket or batch inference produces support-group routing suggestions that remain subject to review rather than being treated as ground truth.
+## Model and data preparation
 
 The validated data rebuild produced 10,399 canonical tickets, including 10,038 labeled tickets, plus 35,001 conversations and 1,525 attachment-metadata rows. Exact IDs, foreign keys, and migrations were verified after retaining historical-only records and reconciling newly exported IDs.
 
 An unreleased BERT candidate trained on 6,137 tickets reached 82.63% accuracy and 0.7563 macro-F1 on a sealed test set. That was 3.11 accuracy points and 5.36 macro-F1 points above the prior XGBoost model, but the candidate remained an evaluation artifact rather than a production claim.
 
-## Current operating data
+<h2 id="current-operating-data">August 2026 data snapshot</h2>
 
 On August 27, 2026, the local PostgreSQL database after read-only Freshdesk reconciliation contained 10,803 ticket records spanning October 4, 2022 through August 27, 2026. Of those records, 10,442—or 96.7%—carried a nonblank support-group ID. Those values spanned 14 observed IDs: 13 mapped to the current runtime group configuration, while one legacy unmapped ID appeared on three records.
+
+<details>
+<summary>Snapshot cohorts and training eligibility</summary>
 
 After lifecycle exclusions, 10,649 records were reportable and 10,285 resolved through the current group mapping. The current training policy further narrowed the corpus to 6,487 records across seven eligible destination classes using lifecycle, provenance, text-quality, group-policy, and minimum-support gates.
 
 During the preceding 30 days, 524 tickets were created and 610 records carried source update timestamps. The cohorts are not additive: all 524 newly created tickets fall inside the 610-record update cohort, alongside 86 older tickets. These figures establish a current, changing source corpus; they do not by themselves establish staff adoption of the application.
+
+</details>
 
 ## Reliability and control
 
@@ -72,4 +73,4 @@ A Recharts dashboard exposes busiest weekdays and peak hours as independent meas
 
 Across the first 248 successful authenticated requests logged inside the running Compose app container on August 27, 2026, the stored analytics-snapshot endpoint measured 24.2 ms p50 and 45.8 ms p95 server-side latency. This was a warm local read of a persisted snapshot—not analytics recomputation, browser or network latency, concurrent load, or a production service-level objective.
 
-This case study describes source-level system behavior, a current local database, and validated local measurements. It does not claim deployed staff adoption, production latency, or downstream staffing improvement.
+This case study describes source-level system behavior, the dated local database snapshot, and validated local measurements. It does not claim deployed staff adoption, production latency, or downstream staffing improvement.

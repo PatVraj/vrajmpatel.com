@@ -10,6 +10,7 @@ import {
   mergeWithVerifiedSnapshot,
   normalizeGitHubActivity,
 } from "./refresh-github-activity.mjs";
+import { isGitHubActivityData } from "../src/lib/githubActivity.ts";
 
 const now = new Date("2026-08-27T12:00:00.000Z");
 
@@ -71,6 +72,16 @@ test("normalizes and overlays the two GitHub calendars", () => {
   const overlap = result.days.find(({ date }) => date === "2026-08-26");
 
   assert.equal(result.source, "github-graphql");
+  assert.equal(result.schemaVersion, 2);
+  assert.equal(result.refreshedAt, now.toISOString());
+  assert.ok(
+    result.accounts.every(
+      (account) =>
+        account.source === "github-graphql" &&
+        account.verifiedAt === now.toISOString(),
+    ),
+  );
+  assert.equal(isGitHubActivityData(result), true);
   assert.equal(result.days.length, 369);
   assert.equal(result.totalContributions, 6);
   assert.deepEqual(overlap, {
@@ -106,8 +117,13 @@ test("preserves a verified personal calendar while accepting fresh academic acti
   );
 
   assert.equal(result.source, "github-graphql-with-verified-account-fallback");
+  assert.equal(result.refreshedAt, now.toISOString());
   assert.equal(result.accounts[0].totalContributions, 2);
+  assert.equal(result.accounts[0].source, "verified-snapshot-fallback");
+  assert.equal(result.accounts[0].verifiedAt, "2026-08-26T12:00:00.000Z");
   assert.equal(result.accounts[1].totalContributions, 530);
+  assert.equal(result.accounts[1].source, "github-graphql");
+  assert.equal(result.accounts[1].verifiedAt, now.toISOString());
   assert.equal(result.totalContributions, 532);
   assert.equal(
     result.days.find((day: { date: string }) => day.date === "2026-08-25")
@@ -118,6 +134,22 @@ test("preserves a verified personal calendar while accepting fresh academic acti
     result.days.find((day: { date: string }) => day.date === "2026-08-26")
       ?.academicCount,
     530,
+  );
+  assert.equal(isGitHubActivityData(result), true);
+});
+
+test("rejects an invalid verified snapshot before using it as an account fallback", () => {
+  const freshPayload = githubPayload();
+  freshPayload.data.personal = calendar("basechildren", "2026-08-26", 0, "NONE");
+  const freshActivity = normalizeGitHubActivity(freshPayload, now);
+  const malformedVerifiedSnapshot = structuredClone(
+    normalizeGitHubActivity(githubPayload(), new Date("2026-08-26T12:00:00.000Z")),
+  );
+  malformedVerifiedSnapshot.days[1].date = malformedVerifiedSnapshot.days[0].date;
+
+  assert.throws(
+    () => mergeWithVerifiedSnapshot(freshActivity, malformedVerifiedSnapshot),
+    /valid verified GitHub activity snapshot/,
   );
 });
 
@@ -168,7 +200,7 @@ test("fails closed on missing credentials and malformed calendars", async () => 
 test("CI supports an optional owner token without committing credentials", async () => {
   const workflow = await readFile(".github/workflows/ci.yml", "utf8");
   const refreshStep = workflow.slice(
-    workflow.indexOf("- name: Refresh public GitHub activity"),
+    workflow.indexOf("- name: Refresh public GitHub activity for the deployment artifact"),
     workflow.indexOf("- name: Install dependencies"),
   );
 
@@ -176,5 +208,6 @@ test("CI supports an optional owner token without committing credentials", async
     refreshStep,
     /GITHUB_TOKEN: \$\{\{ secrets\.GITHUB_ACTIVITY_TOKEN \|\| github\.token \}\}/,
   );
+  assert.match(refreshStep, /Deployment-only refresh/);
   assert.doesNotMatch(refreshStep, /gho_|github_pat_/);
 });

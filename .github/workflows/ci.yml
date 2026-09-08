@@ -31,7 +31,8 @@ jobs:
           node-version: 24
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
-      - name: Refresh public GitHub activity
+      - name: Refresh public GitHub activity for the deployment artifact
+        # Deployment-only refresh: the committed file remains a reviewed baseline.
         if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_ACTIVITY_TOKEN || github.token }}

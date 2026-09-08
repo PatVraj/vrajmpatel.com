@@ -26,13 +26,16 @@ tested in CI as a forward-compatibility check.
 
 ## GitHub activity snapshot
 
-The About page reads the versioned two-account snapshot in
-`src/data/githubActivitySnapshot.json`. CI refreshes public activity with its
-built-in token and preserves an account's last verified calendar if GitHub
-returns zero for only that account. A `GITHUB_ACTIVITY_TOKEN` Actions secret
-can optionally provide the owner-visible `basechildren` calendar; credentials
-must never be committed. A refresh fails if both accounts return zero or if
-daily counts do not reconcile with their totals.
+The About page has a checked-in, reviewed baseline in
+`src/data/githubActivitySnapshot.json`. Scheduled and `main` CI builds refresh
+activity only in their deployment workspace; they deliberately do not commit
+activity updates back to Git. If GitHub returns zero for exactly one account,
+the build preserves that account's last verified calendar and the page shows
+its account-specific verification time rather than presenting it as fresh. A
+`GITHUB_ACTIVITY_TOKEN` Actions secret can optionally provide the owner-visible
+`basechildren` calendar; credentials must never be committed. A refresh fails
+if both accounts return zero or if the strict snapshot contract does not
+reconcile dates and totals.
 
 ## PostHog
 

@@ -16,11 +16,44 @@ const snapshot = JSON.parse(
 
 test("checked-in GitHub activity snapshot matches the public two-account contract", () => {
   assert.equal(isGitHubActivityData(snapshot), true);
+  assert.equal(snapshot.schemaVersion, 2);
+  assert.equal(snapshot.source, "checked-in-baseline");
   assert.equal(accountFor(snapshot, "personal").login, "basechildren");
   assert.equal(accountFor(snapshot, "academic").login, "PatVraj");
   assert.ok(accountFor(snapshot, "personal").totalContributions > 0);
   assert.ok(accountFor(snapshot, "academic").totalContributions > 0);
+  assert.ok(
+    snapshot.accounts.every(
+      (account: { source: string; verifiedAt: string }) =>
+        account.source === "checked-in-baseline" &&
+        account.verifiedAt === snapshot.refreshedAt,
+    ),
+  );
   assert.doesNotMatch(JSON.stringify(snapshot), /IBS-Vraj/);
+});
+
+test("rejects malformed snapshot timestamps, date sequences, ranges, and totals", () => {
+  for (const date of ["2026-13-01", "2026-02-30", "2026-00-00"]) {
+    const invalidDate = structuredClone(snapshot);
+    invalidDate.range.from = date;
+    assert.equal(isGitHubActivityData(invalidDate), false);
+  }
+
+  const duplicateDay = structuredClone(snapshot);
+  duplicateDay.days[1].date = duplicateDay.days[0].date;
+  assert.equal(isGitHubActivityData(duplicateDay), false);
+
+  const inconsistentRange = structuredClone(snapshot);
+  inconsistentRange.range.to = inconsistentRange.days.at(-2).date;
+  assert.equal(isGitHubActivityData(inconsistentRange), false);
+
+  const inconsistentTotal = structuredClone(snapshot);
+  inconsistentTotal.accounts[0].totalContributions += 1;
+  assert.equal(isGitHubActivityData(inconsistentTotal), false);
+
+  const invalidTimestamp = structuredClone(snapshot);
+  invalidTimestamp.accounts[0].verifiedAt = "not-a-timestamp";
+  assert.equal(isGitHubActivityData(invalidTimestamp), false);
 });
 
 test("combined GitHub contribution counts reconcile by day and account", () => {
@@ -71,4 +104,14 @@ test("refresh time keeps a deterministic UTC fallback before local enhancement",
     formattedRefreshTime("2026-08-28T00:42:00.000Z"),
     "Aug 28, 2026, 12:42 AM UTC",
   );
+});
+
+test("activity UI distinguishes a checked-in baseline from an account fallback", async () => {
+  const component = await readFile("src/components/GitHubActivity.astro", "utf8");
+
+  assert.match(component, /Snapshot verified/);
+  assert.match(component, /data-activity-refresh-time/);
+  assert.match(component, /data-activity-fallback/);
+  assert.match(component, /data-activity-account-verified-time/);
+  assert.doesNotMatch(component, /data-activity-sync-time/);
 });
