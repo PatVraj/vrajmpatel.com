@@ -3,11 +3,14 @@ import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
+  ANALYTICS_MODE_QUERY_PARAMETER,
+  ANALYTICS_MODE_STORAGE_KEY,
   CONSENT_STORAGE_KEY,
   defaultConsent,
   hasTrackingGrant,
   isProductionAnalyticsHost,
   optedOutConsent,
+  parseAnalyticsMode,
   parseStoredConsent,
   serializeConsent,
 } from "../src/lib/posthogConsent.ts";
@@ -42,6 +45,16 @@ test("parses only complete boolean consent records", () => {
   assert.equal(CONSENT_STORAGE_KEY, "vrajmpatel-analytics-consent");
 });
 
+test("recognizes only explicit live and testing analytics modes", () => {
+  assert.equal(ANALYTICS_MODE_STORAGE_KEY, "vrajmpatel-analytics-mode");
+  assert.equal(ANALYTICS_MODE_QUERY_PARAMETER, "analytics_mode");
+  assert.equal(parseAnalyticsMode("live"), "live");
+  assert.equal(parseAnalyticsMode("testing"), "testing");
+  assert.equal(parseAnalyticsMode("test"), null);
+  assert.equal(parseAnalyticsMode("owner"), null);
+  assert.equal(parseAnalyticsMode(null), null);
+});
+
 test("treats either remaining grant as enough to keep PostHog capturing", () => {
   assert.equal(hasTrackingGrant({ analytics: true, replay: false }), true);
   assert.equal(hasTrackingGrant({ analytics: false, replay: true }), true);
@@ -68,6 +81,10 @@ test("privacy page controls notify the tracker, and the first-visit banner is go
   assert.match(tracker, /CONSENT_CHANGE_EVENT/);
   assert.match(tracker, /applyConsent/);
   assert.match(tracker, /defaultConsent/);
+  assert.match(tracker, /ANALYTICS_MODE_STORAGE_KEY/);
+  assert.match(tracker, /X-Vrajmpatel-Analytics-Mode/);
+  assert.match(tracker, /effectiveConsent/);
+  assert.match(tracker, /testingMode \? optedOutConsent\(\) : consent/);
   assert.match(tracker, /recruiter_brief_opened/);
   assert.match(tracker, /"account"/);
   assert.doesNotMatch(tracker, /hasBrowserPrivacySignal/);

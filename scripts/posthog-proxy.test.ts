@@ -14,6 +14,8 @@ test("PostHog proxy worker targets US Cloud and is not a fake local stub", async
   assert.match(worker, /us-assets\.i\.posthog\.com/);
   assert.match(worker, /X-Forwarded-For/);
   assert.match(worker, /CF-Connecting-IP/);
+  assert.match(worker, /X-Vrajmpatel-Analytics-Mode/);
+  assert.match(worker, /isTestingIngestion/);
   assert.doesNotMatch(worker, /localhost/);
   assert.match(wrangler, /vrajmpatel-ingest/);
   assert.match(wrangler, /workers_dev = false/);

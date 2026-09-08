@@ -32,10 +32,12 @@ activity only in their deployment workspace; they deliberately do not commit
 activity updates back to Git. If GitHub returns zero for exactly one account,
 the build preserves that account's last verified calendar and the page shows
 its account-specific verification time rather than presenting it as fresh. A
-`GITHUB_ACTIVITY_TOKEN` Actions secret can optionally provide the owner-visible
-`basechildren` calendar; credentials must never be committed. A refresh fails
-if both accounts return zero or if the strict snapshot contract does not
-reconcile dates and totals.
+`BASECHILDREN_GITHUB_ACTIVITY_TOKEN` Actions secret must authenticate as `basechildren` to
+provide the owner-visible personal calendar; credentials must never be
+committed. Without it, GitHub legitimately returns zero personal contributions
+to the academic/GitHub Actions identity and the build retains the last verified
+personal snapshot. A refresh fails if both accounts return zero or if the strict
+snapshot contract does not reconcile dates and totals.
 
 ## PostHog
 
@@ -57,6 +59,13 @@ this default. See `src/components/Tracker.astro` and
 
 The slim `posthog-js` bundle cannot load session recording, so the tracker
 uses the full module.
+
+To keep owner QA out of production analytics, open the canonical site once with
+`?analytics_mode=testing`. The mode is saved only in that browser, removed from
+the visible URL immediately, and disables browser capture. It also attaches a
+request header to PostHog requests so `e.vrajmpatel.com` can discard any queued
+capture, batch, or recording payload locally rather than forward it. Return
+that browser to normal collection with `?analytics_mode=live`.
 
 ## Checks
 

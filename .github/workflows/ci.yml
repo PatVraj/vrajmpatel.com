@@ -43,7 +43,8 @@ jobs:
         # Validate the checked-in baseline first; refresh only the build workspace.
         if: github.event_name != 'pull_request'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_ACTIVITY_TOKEN || github.token }}
+          GITHUB_TOKEN: ${{ secrets.BASECHILDREN_GITHUB_ACTIVITY_TOKEN || github.token }}
+          GITHUB_ACTIVITY_EXPECTED_VIEWER: ${{ secrets.BASECHILDREN_GITHUB_ACTIVITY_TOKEN != '' && 'basechildren' || '' }}
         run: node scripts/refresh-github-activity.mjs
       - name: Require the production analytics key
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'

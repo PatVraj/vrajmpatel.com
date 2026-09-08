@@ -54,9 +54,13 @@ const apiHost = normalizeApiHost(
     import {
       CONSENT_CHANGE_EVENT,
       CONSENT_STORAGE_KEY,
+      ANALYTICS_MODE_QUERY_PARAMETER,
+      ANALYTICS_MODE_STORAGE_KEY,
       defaultConsent,
       hasTrackingGrant,
       isProductionAnalyticsHost,
+      optedOutConsent,
+      parseAnalyticsMode,
       parseStoredConsent,
       type PostHogConsent,
     } from "../lib/posthogConsent";
@@ -84,9 +88,47 @@ const apiHost = normalizeApiHost(
       const { default: posthog } = await import("posthog-js");
       let analyticsPageviewSent = false;
 
+      const readAnalyticsMode = () => {
+        const url = new URL(window.location.href);
+        const requestedMode = parseAnalyticsMode(
+          url.searchParams.get(ANALYTICS_MODE_QUERY_PARAMETER),
+        );
+
+        if (requestedMode) {
+          try {
+            localStorage.setItem(ANALYTICS_MODE_STORAGE_KEY, requestedMode);
+          } catch {
+            // Testing mode is best-effort when browser storage is unavailable.
+          }
+
+          url.searchParams.delete(ANALYTICS_MODE_QUERY_PARAMETER);
+          window.history.replaceState(
+            window.history.state,
+            "",
+            url.pathname + url.search + url.hash,
+          );
+          return requestedMode;
+        }
+
+        try {
+          return (
+            parseAnalyticsMode(
+              localStorage.getItem(ANALYTICS_MODE_STORAGE_KEY),
+            ) ?? "live"
+          );
+        } catch {
+          return "live";
+        }
+      };
+
+      const testingMode = readAnalyticsMode() === "testing";
+
       const readConsent = () =>
         parseStoredConsent(localStorage.getItem(CONSENT_STORAGE_KEY)) ??
         defaultConsent();
+
+      const effectiveConsent = (consent: PostHogConsent) =>
+        testingMode ? optedOutConsent() : consent;
 
       const maskedRecording = {
         maskAllInputs: true,
@@ -97,7 +139,8 @@ const apiHost = normalizeApiHost(
         },
       } as const;
 
-      const applyConsent = (consent: PostHogConsent) => {
+      const applyConsent = (requestedConsent: PostHogConsent) => {
+        const consent = effectiveConsent(requestedConsent);
         posthog.set_config({
           autocapture: consent.analytics,
           capture_pageview: false,
@@ -141,7 +184,7 @@ const apiHost = normalizeApiHost(
         }
       };
 
-      const initialConsent = readConsent();
+      const initialConsent = effectiveConsent(readConsent());
 
       posthog.init(projectKey, {
         api_host: apiHost,
@@ -166,15 +209,18 @@ const apiHost = normalizeApiHost(
         disable_capture_url_hashes: true,
         cross_subdomain_cookie: false,
         secure_cookie: true,
+        request_headers: testingMode
+          ? { "X-Vrajmpatel-Analytics-Mode": "testing" }
+          : {},
         session_recording: maskedRecording,
         before_send: (event) =>
-          filterConsentedPostHogEvent(event, readConsent()),
+          filterConsentedPostHogEvent(event, effectiveConsent(readConsent())),
         loaded: () => applyConsent(readConsent()),
       });
 
       let lastTrackedPathname = window.location.pathname;
       const capturePageview = () => {
-        if (!readConsent().analytics) return;
+        if (!effectiveConsent(readConsent()).analytics) return;
 
         const pathname = window.location.pathname;
         if (pathname === lastTrackedPathname && analyticsPageviewSent) return;
@@ -207,7 +253,7 @@ const apiHost = normalizeApiHost(
       ]);
 
       document.addEventListener("click", (event) => {
-        if (!readConsent().analytics) return;
+        if (!effectiveConsent(readConsent()).analytics) return;
         if (!(event.target instanceof Element)) return;
 
         const trackedElement =
