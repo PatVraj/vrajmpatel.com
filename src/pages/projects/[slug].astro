@@ -1,8 +1,12 @@
 ---
 import { getCollection, render } from "astro:content";
+import WorkflowDemo from "../../components/WorkflowDemo.astro";
+import ContactBlock from "../../components/ContactBlock.astro";
+import CaseNavigation from "../../components/CaseNavigation.astro";
+import { projectDemos } from "../../data/projectDemos";
 import ProofGrid from "../../components/ProofGrid.astro";
 import SystemPath from "../../components/SystemPath.astro";
-import { isPublicProject } from "../../lib/projects";
+import { isPublicProject, isCaseStudy, sortProjects } from "../../lib/projects";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
@@ -15,6 +19,15 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const projects = (await getCollection("projects")).filter(isPublicProject).filter(isCaseStudy).sort(sortProjects);
+const nextProject = projects.length > 1 ? projects[(projects.findIndex(project => project.id === entry.id) + 1) % projects.length] : undefined;
+const sections = [
+  ...(entry.data.overview ? [{ id: "overview", label: "Overview" }] : []),
+  ...(projectDemos[entry.id] ? [{ id: "walkthrough", label: "Example" }] : []),
+  ...(entry.data.proof?.length ? [{ id: "results", label: "Results" }] : []),
+  ...(entry.data.systemPath?.length ? [{ id: "architecture", label: "Architecture" }] : []),
+  { id: "evidence", label: "Details & evidence" },
+];
 const hasHeaderResources = Boolean(
   (entry.data.privateRepo && !entry.data.status) ||
     (!entry.data.privateRepo && entry.data.github) ||
@@ -29,7 +42,6 @@ const hasHeaderResources = Boolean(
   ogImage={`/og/${entry.id}.png`}
   ogImageAlt={`Project preview for ${entry.data.title}`}
   schemaType="WebPage"
-  robots={entry.data.visibility === "archived" ? "noindex, follow" : "index, follow"}
 >
   <article class="mx-auto max-w-3xl">
     <a
@@ -113,9 +125,9 @@ const hasHeaderResources = Boolean(
 
       {
         (entry.data.contribution || entry.data.setting || entry.data.status) && (
-          <dl class="mt-6 grid grid-cols-2 gap-x-5 gap-y-6 border-t border-slate-200 pt-6 sm:mt-8 sm:grid-cols-3 sm:gap-8 dark:border-slate-800">
-            {entry.data.contribution && (
-              <div class="col-span-2 sm:col-span-1">
+          <dl class="mt-6 grid grid-cols-1 gap-x-5 gap-y-6 border-t border-slate-200 pt-6 sm:mt-8 sm:grid-cols-2 sm:gap-8 dark:border-slate-800">
+            {entry.data.contribution && !entry.data.overview && (
+              <div class="sm:col-span-1">
                 <dt class="font-mono text-xs text-slate-500 dark:text-slate-400">
                   Contribution
                 </dt>
@@ -149,29 +161,22 @@ const hasHeaderResources = Boolean(
       }
     </header>
 
-    {
-      entry.data.proof && entry.data.proof.length > 0 && (
-        <section class="pt-8 sm:pt-10" aria-labelledby="project-evidence-heading">
-          <h2 id="project-evidence-heading" class="sr-only">Project evidence</h2>
-          <ProofGrid items={entry.data.proof} columns={entry.id === "full-stack-biometric-marathon" ? 3 : 2} />
-        </section>
-      )
-    }
-
-    {
-      entry.data.systemPath && entry.data.systemPath.length > 0 && (
-        <SystemPath
-          steps={entry.data.systemPath}
-          label={entry.data.systemPathLabel}
-          heading={entry.data.systemPathHeading}
-          description={entry.data.systemPathDescription}
-        />
-      )
-    }
-
-    <div class="py-8 text-base leading-7 text-slate-600 [&_a]:underline [&_a]:decoration-slate-300 [&_a]:underline-offset-4 [&_a]:hover:text-blue-700 [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-slate-950 [&_h2:first-child]:mt-0 [&_h3]:mt-7 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-slate-950 [&_li]:pl-1 [&_ol]:mt-5 [&_ol]:list-decimal [&_ol]:space-y-3 [&_ol]:pl-6 [&_p+p]:mt-5 [&_strong]:font-semibold [&_strong]:text-slate-900 [&_ul]:mt-5 [&_ul]:list-disc [&_ul]:space-y-3 [&_ul]:pl-6 dark:text-slate-400 dark:[&_a]:decoration-slate-700 dark:[&_a]:hover:text-blue-400 dark:[&_h2]:text-white dark:[&_h3]:text-slate-200 dark:[&_strong]:text-slate-200 sm:py-10 sm:text-lg sm:leading-8 sm:[&_h2]:mt-10 sm:[&_h3]:mt-8">
-      <Content />
-    </div>
+    <CaseNavigation sections={sections} />
+    {entry.data.overview && <section id="overview" class="case-overview" aria-labelledby="overview-heading" data-reveal>
+      <p class="eyebrow">Overview</p>
+      <h2 id="overview-heading" class="section-title">The problem</h2>
+      <p>{entry.data.overview.problem}</p>
+      <h3>My contribution</h3>
+      <p>{entry.data.overview.built}</p>
+    </section>}
+    <WorkflowDemo project={entry.id} />
+    {entry.data.proof?.length && <section id="results" class="page-section" aria-labelledby="project-evidence-heading">
+      <p class="eyebrow">Measured and implemented</p>
+      <h2 id="project-evidence-heading" class="section-title">Results, with their scope.</h2>
+      <ProofGrid items={entry.data.proof} columns={3} class="mt-6" />
+    </section>}
+    {entry.data.systemPath?.length && <SystemPath steps={entry.data.systemPath} label={entry.data.systemPathLabel} heading={entry.data.systemPathHeading} description={entry.data.systemPathDescription} />}
+    <section id="evidence" class="case-body" aria-label="Details and evidence"><Content /></section>
 
     {
       entry.data.tech && entry.data.tech.length > 0 && (
@@ -185,5 +190,7 @@ const hasHeaderResources = Boolean(
         </section>
       )
     }
+    {nextProject && <a href={`/projects/${nextProject.id}`} class="related-project text-link" data-ph-event="project_opened" data-ph-project={nextProject.id} data-ph-placement="related_project"><span class="eyebrow">Continue exploring</span><strong>{nextProject.data.title}</strong></a>}
+    <ContactBlock project={entry.data.title} compact />
   </article>
 </BaseLayout>

@@ -31,10 +31,11 @@ updates:
           - minor
           - patch
     ignore:
-      # astro-og-canvas 0.13.0 currently requires canvaskit-wasm ^0.41.1.
+      # Direct dependency is required for pnpm OG builds; match astro-og-canvas.
+      # astro-og-canvas 0.13.1 requires canvaskit-wasm ^0.42.0.
       - dependency-name: canvaskit-wasm
         versions:
-          - ">=0.42.0"
+          - ">=0.43.0"
       # @astrojs/check 0.9.10 currently declares TypeScript <=6.
       - dependency-name: typescript
         versions:

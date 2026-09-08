@@ -6,6 +6,9 @@ export const isPublicProject = (entry: CollectionEntry<"projects">) =>
 export const isCaseStudy = (entry: CollectionEntry<"projects">) =>
   entry.data.presentation === "case-study";
 
+export const isPublicExperience = (entry: CollectionEntry<"experience">) =>
+  entry.data.visibility === "public";
+
 export const sortProjects = (
   left: CollectionEntry<"projects">,
   right: CollectionEntry<"projects">,

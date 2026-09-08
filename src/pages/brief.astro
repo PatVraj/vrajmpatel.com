@@ -1,178 +1,50 @@
 ---
-import ProofGrid from "../components/ProofGrid.astro";
+import { getCollection } from "astro:content";
 import { profile } from "../data/profile";
-import { proofPoints } from "../data/recruiter";
+import { isPublicProject, isCaseStudy, sortProjects } from "../lib/projects";
 import BaseLayout from "../layouts/BaseLayout.astro";
-
-const selectedWork = [
-  {
-    id: "operational-ticket-intelligence",
-    title: "Operational Ticket Intelligence",
-    href: "/projects/operational-ticket-intelligence",
-    description:
-      "Full-stack support operations over a current 10.8K-ticket corpus, with 96.7% carrying support-group IDs, read-only reconciliation, and sealed-test model evaluation.",
-  },
-  {
-    id: "building-indian-parliamentary-datasets",
-    title: "Indian Parliamentary Data",
-    href: "/projects/building-indian-parliamentary-datasets",
-    description:
-      "Recoverable crawling, transcription, translation, PDF text extraction, and document normalization for multi-decade public-interest research.",
-  },
-  {
-    id: "full-stack-biometric-marathon",
-    title: "SeeMyRace",
-    href: "/projects/full-stack-biometric-marathon",
-    description:
-      "Full-stack race-photo retrieval system built primarily on open-source frameworks; I shipped verification, GPX race creation, admin, and upload/search workflows across 32 mainline commits, with work landing through seven merged PRs.",
-  },
-] as const;
+const projects = (await getCollection("projects")).filter(isPublicProject).filter(isCaseStudy).sort(sortProjects);
 ---
-
-<BaseLayout
-  title="Recruiter Brief — Vraj Patel"
-  description="A concise recruiter brief for Vraj Patel, a systems integration engineer focused on backend systems, automation, data engineering, and applied ML infrastructure."
->
-  <header class="grid gap-8 border-b border-slate-200 pb-10 md:grid-cols-[1fr_auto] md:items-end dark:border-slate-800">
-    <div class="max-w-3xl">
-      <p class="font-mono text-xs text-slate-500 dark:text-slate-400">Recruiter brief</p>
-      <h1 class="mt-3 text-4xl font-semibold tracking-[-0.035em] text-slate-950 dark:text-white sm:text-5xl">
-        {profile.name}
-      </h1>
-      <p class="mt-5 max-w-2xl text-xl font-medium leading-8 tracking-tight text-slate-800 dark:text-slate-200 sm:text-2xl">
-        Systems integration engineer who turns operational friction into reliable software.
-      </p>
-      <p class="mt-5 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-400 sm:text-lg">
-        I build internal software where reliability, data quality, and operator
-        judgment matter. At CU Boulder’s Institute of Behavioral Science, I work
-        across backend services, operational analytics, automation, and ML-assisted
-        workflows.
-      </p>
-    </div>
-
-    <nav aria-label="Recruiter resources" class="flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium md:justify-end">
-      <a
-        href="/resume.pdf"
-        target="_blank"
-        rel="noopener noreferrer"
-        data-ph-event="resume_clicked"
-        data-ph-placement="recruiter_brief"
-        class="inline-flex min-h-11 items-center rounded-md bg-slate-950 px-4 text-white transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:bg-white dark:text-slate-950 dark:hover:bg-blue-200 dark:focus-visible:ring-offset-slate-950"
-      >
-        Resume
-      </a>
-      <a
-        href="https://www.linkedin.com/in/vrajmp/"
-        target="_blank"
-        rel="noopener noreferrer"
-        data-ph-event="social_profile_clicked"
-        data-ph-network="linkedin"
-        data-ph-placement="recruiter_brief"
-        class="inline-flex min-h-11 items-center underline decoration-slate-300 underline-offset-4 hover:text-blue-700 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:decoration-slate-700 dark:hover:text-blue-400"
-      >
-        LinkedIn
-      </a>
-    </nav>
-  </header>
-
-  <section class="pt-8 sm:pt-10" aria-labelledby="at-a-glance-heading">
-    <h2 id="at-a-glance-heading" class="sr-only">At a glance</h2>
-    <dl class="grid grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
-      <div>
-        <dt class="font-mono text-xs text-slate-500 dark:text-slate-400">Current role</dt>
-        <dd class="mt-2 text-sm leading-6 text-slate-800 dark:text-slate-200">{profile.role}</dd>
-      </div>
-      <div>
-        <dt class="font-mono text-xs text-slate-500 dark:text-slate-400">Location</dt>
-        <dd class="mt-2 text-sm leading-6 text-slate-800 dark:text-slate-200">{profile.location}</dd>
-      </div>
-      <div class="col-span-2 sm:col-span-1">
-        <dt class="font-mono text-xs text-slate-500 dark:text-slate-400">Education</dt>
-        <dd class="mt-2 text-sm leading-6 text-slate-800 dark:text-slate-200">{profile.education}</dd>
-      </div>
-      <div class="col-span-2 sm:col-span-1">
-        <dt class="font-mono text-xs text-slate-500 dark:text-slate-400">Strongest fit</dt>
-        <dd class="mt-2 text-sm leading-6 text-slate-800 dark:text-slate-200">
-          Systems Integration · Backend/Platform · Data Engineering · Applied ML Infrastructure
-        </dd>
-      </div>
+<BaseLayout title="Recruiter Brief — Vraj Patel" description="Vraj Patel: role fit, selected contributions, education, and professional contact in one concise brief.">
+  <article class="recruiter-brief">
+    <header>
+      <p class="eyebrow">Recruiter brief</p>
+      <h1 class="page-title">{profile.name}</h1>
+      <p class="brief-position">Systems Integration Engineer · CU Boulder</p>
+      <p class="muted-copy">Python, SQL, backend systems, and applied ML. I build internal software and data workflows with clear state, review, and recovery.</p>
+      <nav class="action-row print:hidden" aria-label="Recruiter resources">
+        <a href="/resume.pdf" class="button-primary" target="_blank" rel="noopener noreferrer" data-ph-event="resume_clicked" data-ph-placement="recruiter_brief">Resume (PDF)</a>
+        <button type="button" class="text-link" data-print-brief hidden>Print / save brief</button>
+        <a href="#contact" class="text-link">Contact</a>
+      </nav>
+    </header>
+    <dl class="brief-facts">
+      <div><dt class="eyebrow">Strongest fit</dt><dd>Backend / Platform · Data Engineering · Systems Integration · Applied ML Infrastructure</dd></div>
+      <div><dt class="eyebrow">Location</dt><dd>{profile.location}</dd></div>
     </dl>
-  </section>
-
-  <section class="pt-12 sm:pt-16" aria-labelledby="evidence-heading">
-    <p class="font-mono text-xs text-slate-500 dark:text-slate-400">Selected evidence</p>
-    <h2 id="evidence-heading" class="mt-2 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-3xl">
-      Results and scale
-    </h2>
-    <ProofGrid items={proofPoints} class="mt-7" />
-  </section>
-
-  <section class="pt-12 sm:pt-16" aria-labelledby="profile-heading">
-    <div class="grid gap-8 md:grid-cols-[15rem_1fr] md:gap-12">
-      <div>
-        <p class="font-mono text-xs text-slate-500 dark:text-slate-400">Engineering profile</p>
-        <h2 id="profile-heading" class="mt-2 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-          Backend, data, and applied ML systems
-        </h2>
-      </div>
-      <div class="space-y-5 text-base leading-7 text-slate-600 dark:text-slate-400 sm:text-lg sm:leading-8">
-        <p>
-          I work on internal tools where source data is imperfect, jobs can run for
-          hours, and a person still needs to review the result. I build the state,
-          checkpoints, and approval boundaries that keep those workflows usable.
-        </p>
-        <p>
-          I have applied the same approach to public-interest data systems, NLP
-          experiments, and anomaly detection on synthetic satellite telemetry
-          through Purdue’s Data Mine and an L3Harris collaboration.
-        </p>
-        <p>
-          I am completing dual M.S. programs in Computer Science and Engineering
-          Management at CU Boulder, where I earned a B.S. in Computer Science with
-          a Business minor.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="pt-12 sm:pt-16" aria-labelledby="selected-proof-heading">
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <p class="font-mono text-xs text-slate-500 dark:text-slate-400">Selected proof</p>
-        <h2 id="selected-proof-heading" class="mt-2 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-3xl">
-          Three projects to inspect
-        </h2>
-      </div>
-      <a
-        href="/projects"
-        class="inline-flex min-h-11 items-center text-sm font-medium underline decoration-slate-300 underline-offset-4 hover:text-blue-700 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:decoration-slate-700 dark:hover:text-blue-400"
-      >
-        All projects
-      </a>
-    </div>
-
-    <ol class="mt-7 border-y border-slate-200 dark:border-slate-800">
-      {
-        selectedWork.map((project, index) => (
-          <li class:list={["grid grid-cols-[2rem_1fr] gap-x-3 gap-y-1 py-5 sm:grid-cols-[2rem_13rem_1fr] sm:gap-6 sm:py-6", index > 0 && "border-t border-slate-200 dark:border-slate-800"]}>
-            <span class="font-mono text-xs leading-7 text-slate-500 dark:text-slate-400">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <a
-              href={project.href}
-              data-ph-event="project_opened"
-              data-ph-project={project.id}
-              data-ph-placement="recruiter_brief"
-              class="col-start-2 inline-flex min-h-11 items-center font-semibold leading-7 text-slate-950 underline decoration-slate-300 underline-offset-4 hover:text-blue-700 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-white dark:decoration-slate-700 dark:hover:text-blue-400 sm:col-auto"
-            >
-              {project.title}
-            </a>
-            <p class="col-start-2 text-sm leading-7 text-slate-600 dark:text-slate-400 sm:col-auto">
-              {project.description}
-            </p>
-          </li>
-        ))
-      }
-    </ol>
-  </section>
+    <section aria-labelledby="brief-projects">
+      <h2 id="brief-projects" class="section-title">Selected contributions</h2>
+      <ol class="brief-projects">
+        {projects.map((entry, i) => <li>
+          <span class="eyebrow" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+          <div><h3><a class="text-link" href={`/projects/${entry.id}`} data-ph-event="project_opened" data-ph-project={entry.id} data-ph-placement="recruiter_brief">{entry.data.title}</a></h3>
+          <p>{entry.data.contribution}</p><p class="brief-evidence">{entry.data.proof?.[entry.id === "full-stack-biometric-marathon" ? 2 : 0]?.value} — {entry.data.proof?.[entry.id === "full-stack-biometric-marathon" ? 2 : 0]?.label}</p></div>
+        </li>)}
+      </ol>
+    </section>
+    <section class="brief-education" aria-labelledby="brief-education">
+      <h2 id="brief-education" class="section-title">Education</h2>
+      <p>Dual M.S. programs in Computer Science and Engineering Management, in progress at CU Boulder.</p>
+      <p>B.S. in Computer Science, Business minor · CU Boulder.</p>
+    </section>
+    <section id="contact" class="brief-contact" aria-labelledby="contact-heading">
+      <h2 id="contact-heading" class="section-title">Contact</h2>
+      <a class="text-link" href="https://www.linkedin.com/in/vrajmp/" target="_blank" rel="noopener noreferrer" data-ph-event="social_profile_clicked" data-ph-network="linkedin" data-ph-placement="recruiter_brief">Message me on LinkedIn</a>
+      <p class="print-address">linkedin.com/in/vrajmp/ · vrajmpatel.com</p>
+    </section>
+  </article>
 </BaseLayout>
+<script>
+  const button = document.querySelector<HTMLButtonElement>("[data-print-brief]");
+  if (button) { button.hidden = false; button.addEventListener("click", () => window.print()); }
+</script>

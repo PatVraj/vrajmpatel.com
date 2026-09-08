@@ -17,6 +17,10 @@ if (!isGitHubActivityData(snapshotJson)) {
 const data = snapshotJson;
 const personal = accountFor(data, "personal");
 const academic = accountFor(data, "academic");
+const fallbackAccount = data.accounts.find(
+  ({ source }) => source === "verified-snapshot-fallback",
+);
+const usesCheckedInBaseline = data.source === "checked-in-baseline";
 const markers = monthMarkers(data.days);
 const weekCount = Math.ceil(data.days.length / 7);
 const calendarDateFormatter = new Intl.DateTimeFormat("en-US", {
@@ -48,9 +52,16 @@ const cellStyle = (day: (typeof data.days)[number]) => {
       <span data-activity-total>{data.totalContributions}</span> contributions across two accounts
     </p>
     <p class="font-mono text-xs leading-5 text-slate-500 dark:text-slate-400" data-activity-status>
-      Last synced <time datetime={data.generatedAt} data-activity-sync-time>{formattedRefreshTime(data.generatedAt)}</time>
+      {usesCheckedInBaseline ? "Snapshot verified" : "Last refreshed"} <time datetime={data.refreshedAt} data-activity-refresh-time>{formattedRefreshTime(data.refreshedAt)}</time>
     </p>
   </div>
+  {
+    fallbackAccount && (
+      <p class="mt-2 text-xs leading-5 text-amber-800 dark:text-amber-200" data-activity-fallback>
+        {fallbackAccount.label} activity is from the last verified snapshot: <time datetime={fallbackAccount.verifiedAt} data-activity-account-verified-time>{formattedRefreshTime(fallbackAccount.verifiedAt)}</time>.
+      </p>
+    )
+  }
 
   <dl class="mt-6 grid border-y border-slate-200 sm:grid-cols-2 dark:border-slate-800">
     <div class="py-5 sm:pr-6">
@@ -86,6 +97,7 @@ const cellStyle = (day: (typeof data.days)[number]) => {
       {personal.totalContributions} personal and {academic.totalContributions}
       academic. The visual grid distinguishes personal, academic, and overlapping
       activity by color.
+      {fallbackAccount && ` ${fallbackAccount.label} activity is from the last verified snapshot.`}
     </p>
     <p
       id="activity-scroll-hint"
@@ -148,6 +160,18 @@ const cellStyle = (day: (typeof data.days)[number]) => {
     <span class="inline-flex items-center gap-2"><span class="github-activity-key github-activity-key--academic" aria-hidden="true"></span>Academic</span>
     <span class="inline-flex items-center gap-2"><span class="github-activity-key github-activity-key--both" aria-hidden="true"></span>Both on the same day</span>
   </div>
+  <details class="activity-text mt-6">
+    <summary>Daily activity in text</summary>
+    <p class="muted-copy">Most recent first. Days with no recorded contributions are omitted; account totals and verification dates above describe this snapshot.</p>
+    <div class="activity-table-scroll" tabindex="0" role="region" aria-label="Daily contribution counts">
+      <table>
+        <caption class="sr-only">Contributions per day for personal and academic accounts</caption>
+        <thead><tr><th scope="col">Date</th><th scope="col">Personal</th><th scope="col">Academic</th></tr></thead>
+        <tbody>{data.days.filter(day => day.total > 0 && day.date >= data.range.from && day.date <= data.range.to).slice().reverse().map(day => <tr><th scope="row"><time datetime={day.date}>{day.date}</time></th><td>{day.personalCount}</td><td>{day.academicCount}</td></tr>)}</tbody>
+      </table>
+    </div>
+  </details>
+
 </div>
 
 <script>
@@ -162,11 +186,13 @@ const cellStyle = (day: (typeof data.days)[number]) => {
   const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const setupActivityCalendar = () => {
-    for (const time of document.querySelectorAll<HTMLTimeElement>("[data-activity-sync-time]")) {
-      const generatedAt = new Date(time.dateTime);
-      if (Number.isNaN(generatedAt.valueOf())) continue;
+    for (const time of document.querySelectorAll<HTMLTimeElement>(
+      "[data-activity-refresh-time], [data-activity-account-verified-time]",
+    )) {
+      const timestamp = new Date(time.dateTime);
+      if (Number.isNaN(timestamp.valueOf())) continue;
 
-      time.textContent = localTimeFormatter.format(generatedAt);
+      time.textContent = localTimeFormatter.format(timestamp);
       time.title = localTimeZone
         ? `Shown in your local time (${localTimeZone})`
         : "Shown in your local time";

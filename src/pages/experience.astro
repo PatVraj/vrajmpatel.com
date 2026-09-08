@@ -1,9 +1,11 @@
 ---
 import { getCollection, render } from "astro:content";
+import ContactBlock from "../components/ContactBlock.astro";
 import ExperienceItem from "../components/ExperienceItem.astro";
+import { isPublicExperience } from "../lib/projects";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const entries = (await getCollection("experience")).sort(
+const entries = (await getCollection("experience")).filter(isPublicExperience).sort(
   (a, b) => a.data.order - b.data.order,
 );
 const experience = await Promise.all(
@@ -21,8 +23,8 @@ const experience = await Promise.all(
       Experience
     </h1>
     <p class="mt-5 text-lg leading-8 text-slate-600 dark:text-slate-400">
-      Systems integration, backend, data, and ML work across CU Boulder,
-      Purdue, and L3Harris.
+      Systems integration and data engineering at CU Boulder and Princeton,
+      alongside satellite cybersecurity research through Purdue and L3Harris.
     </p>
   </header>
 
@@ -35,4 +37,5 @@ const experience = await Promise.all(
       ))
     }
   </section>
+  <ContactBlock />
 </BaseLayout>

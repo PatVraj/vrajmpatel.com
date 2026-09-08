@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1,
-  "generatedAt": "2026-08-27T23:31:24.024Z",
-  "source": "public-profile-snapshot",
+  "schemaVersion": 2,
+  "refreshedAt": "2026-08-27T23:31:24.024Z",
+  "source": "checked-in-baseline",
   "range": {
     "from": "2025-08-24",
     "to": "2026-08-27"
@@ -12,14 +12,18 @@
       "label": "Personal",
       "login": "basechildren",
       "url": "https://github.com/basechildren",
-      "totalContributions": 10
+      "totalContributions": 10,
+      "source": "checked-in-baseline",
+      "verifiedAt": "2026-08-27T23:31:24.024Z"
     },
     {
       "key": "academic",
       "label": "Academic",
       "login": "PatVraj",
       "url": "https://github.com/PatVraj",
-      "totalContributions": 65
+      "totalContributions": 65,
+      "source": "checked-in-baseline",
+      "verifiedAt": "2026-08-27T23:31:24.024Z"
     }
   ],
   "totalContributions": 75,

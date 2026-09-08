@@ -1,50 +1,45 @@
 export interface ProofPoint {
   value: string;
   label: string;
+  href?: string;
+  linkLabel?: string;
 }
 
-export const proofPoints = [
+export const proofPoints: readonly ProofPoint[] = [
   {
-    value: "82.6% / 0.756",
-    label: "Sealed-test accuracy / macro-F1 for an unreleased BERT routing candidate",
+    value: "15 minutes to under 1",
+    label: "Typical Active Directory group cleanup after PowerShell automation.",
+    href: "/experience#cu-boulder-ibs-2025",
+    linkLabel: "Automation work",
   },
   {
-    value: "10.8K / 96.7%",
-    label: "Current ticket corpus / records carrying support-group IDs",
+    value: "10.8K tickets",
+    label: "Reconciled in a local database snapshot on August 27, 2026.",
+    href: "/projects/operational-ticket-intelligence#current-operating-data",
+    linkLabel: "Data and evidence",
   },
   {
-    value: "61% / 66% smaller",
-    label: "Raw / gzip analytics payload after replacing Plotly with Recharts",
+    value: "40+ GB of audio",
+    label: "Campaign recordings processed for parliamentary-data research.",
+    href: "/projects/building-indian-parliamentary-datasets#princeton-engineering-phase",
+    linkLabel: "Pipeline work",
   },
-  {
-    value: "~15 min → <1 min",
-    label: "Typical Active Directory group cleanup after PowerShell automation",
-  },
-] satisfies readonly ProofPoint[];
+];
 
-export const capabilities = [
+export const selectedEngineering = [
   {
-    title: "Backend systems and controlled integrations",
-    summary:
-      "My ticket-intelligence work connects source reconciliation, application state, staff review, and approved outbound updates. Model predictions remain separate from authorization.",
-    evidence: "FastAPI · PostgreSQL · React · Human-in-the-loop ML",
-    href: "/projects/operational-ticket-intelligence",
-    linkLabel: "See the ticket-intelligence case study",
+    title: "Keeping model suggestions separate from approval",
+    description: "Ticket reconciliation, operator review, and the controls around outbound changes.",
+    href: "/projects/operational-ticket-intelligence#reliability-and-control",
   },
   {
-    title: "Automation with measured results",
-    summary:
-      "I turn repetitive administrative work into bounded tools with clear outcomes, including an Active Directory offboarding workflow that reduced a typical 15-minute cleanup to under one minute.",
-    evidence: "PowerShell · Active Directory · Endpoint operations",
-    href: "/experience",
-    linkLabel: "See the experience behind the result",
+    title: "Making long data jobs restartable",
+    description: "Collection checkpoints, intermediate artifacts, and normalization that preserves source context.",
+    href: "/projects/building-indian-parliamentary-datasets#engineering-decisions",
   },
   {
-    title: "Recoverable data and ML pipelines",
-    summary:
-      "I design long-running collection and processing jobs around checkpoints, resumability, and reviewable outputs—from public records to audio and satellite telemetry.",
-    evidence: "Python · AWS · Selenium · Document processing",
-    href: "/projects/building-indian-parliamentary-datasets",
-    linkLabel: "See the parliamentary-data case study",
+    title: "Turning uncertain matches into reviewable results",
+    description: "My contribution to athlete verification and race creation in SeeMyRace.",
+    href: "/projects/full-stack-biometric-marathon#engineering-highlights",
   },
 ] as const;

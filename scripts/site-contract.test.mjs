@@ -15,18 +15,11 @@ test("homepage and recruiter brief expose evidence-led navigation", async () => 
 
   assert.match(homepage, /Evidence at a glance/);
   assert.match(homepage, /Recruiter brief/);
-  assert.match(homepage, /82\.6% \/ 0\.756/);
-  assert.match(homepage, /10\.8K \/ 96\.7%/);
-  assert.match(homepage, /61% \/ 66% smaller/);
-  assert.match(homepage, /~15 min → &lt;1 min/);
-  assert.match(homepage, /Sealed-test accuracy \/ macro-F1/);
-  assert.match(homepage, /Human-in-the-loop ML/);
-  assert.match(homepage, /Endpoint operations/);
-  assert.match(homepage, /Document processing/);
-  assert.doesNotMatch(
-    homepage,
-    /· (?:human-in-the-loop ML|endpoint operations|document processing)/,
-  );
+  assert.match(homepage, /10\.8K tickets/);
+  assert.match(homepage, /40\+ GB of audio/);
+  assert.match(homepage, /15 minutes to under 1/);
+  assert.match(homepage, /August 27, 2026/);
+  assert.ok(homepage.indexOf('id="selected-work"') < homepage.indexOf('id="proof-heading"'));
   assert.match(
     homepage,
     /Undergraduate Research Assistant, Satellite Telemetry Data Analysis/,
@@ -41,11 +34,12 @@ test("homepage and recruiter brief expose evidence-led navigation", async () => 
   assert.doesNotMatch(homepage, /github\.com\/IBS-Vraj/);
   assert.equal(
     (homepage.match(/data-ph-placement="project_list_action"/g) ?? []).length,
-    2,
-    "the homepage should keep selected work to two compact case-study actions",
+    3,
+    "the homepage should expose all three flagship case studies",
   );
-  assert.match(brief, /Backend, data, and applied ML systems/);
-  assert.match(brief, /~15 min → &lt;1 min/);
+  assert.match(brief, /Selected contributions/);
+  assert.match(brief, /data-print-brief/);
+  assert.match(brief, /Resume \(PDF\)/);
 });
 
 test("about establishes the current profile before public GitHub activity", async () => {
@@ -57,7 +51,10 @@ test("about establishes the current profile before public GitHub activity", asyn
   assert.ok(backgroundIndex > -1, "Background heading was not generated");
   assert.ok(backgroundIndex < headingIndex, "Background should precede GitHub activity");
   assert.match(about, /contributions across two accounts/);
-  assert.match(about, /<time[^>]+datetime="[^"]+Z"[^>]+data-activity-sync-time/);
+  const activity = JSON.parse(await readFile("src/data/githubActivitySnapshot.json", "utf8"));
+  assert.match(about, activity.source === "checked-in-baseline" ? /Snapshot verified/ : /Last refreshed/);
+  assert.match(about, /<time[^>]+datetime="[^"]+Z"[^>]+data-activity-refresh-time/);
+  assert.doesNotMatch(about, /data-activity-sync-time/);
   assert.match(about, /github\.com\/basechildren/);
   assert.match(about, /github\.com\/PatVraj/);
   assert.match(about, /data-account-total="personal">[1-9][0-9]*/);
@@ -82,7 +79,8 @@ test("flagship case study includes the complete public-safe system path", async 
     assert.match(page, new RegExp(step));
   }
 
-  assert.match(page, /82\.63% \/ 0\.7563/);
+  assert.match(page, /82\.63% accuracy/);
+  assert.match(page, /macro-F1 0\.7563/);
   assert.match(page, /10,803 ticket records/);
   assert.match(page, /10,442(?:—|&mdash;)or 96\.7%/);
   assert.match(page, /13 mapped to the current runtime group configuration/);
@@ -111,14 +109,14 @@ test("SeeMyRace presents recruiter-ready evidence without overstating ML ownersh
     assert.match(page, evidence);
   }
 
-  assert.match(brief, /32 mainline commits, with work landing through seven merged PRs/);
-  assert.match(brief, /Full-stack race-photo retrieval system built primarily on open-source/);
+  assert.match(brief, /athlete verification, GPX race creation/);
+  assert.match(brief, /upload\/search workflows/);
   assert.match(page, /Software Engineering/);
-  assert.match(page, /Match Verification · GPX Race Creation · Upload\/Search UX · OCR\/SWT Evaluation/);
+  assert.match(page, /I contributed the authenticated confirm\/deny workflow, GPX-backed race creation/);
   assert.match(page, /requested a distinct Jira implementation ticket/);
   assert.match(page, /restricted to non-commercial research/);
   assert.match(page, /work added by other team members/);
-  assert.match(page, /md:grid-cols-3/);
+  assert.match(page, /proof-grid--three/);
   assert.match(llms, /user-scoped match verification/);
   assert.match(llms, /Full-Stack Software Engineering and Applied ML/);
   assert.match(llms, /architectural changes, not measured accuracy gains/);
@@ -181,12 +179,12 @@ test("privacy policy is published, linked, and opt-out capable", async () => {
   assert.match(privacy, /data-consent-form/);
   assert.match(privacy, /data-consent-analytics[^>]*checked/);
   assert.match(privacy, /data-consent-replay[^>]*checked/);
-  assert.match(privacy, /data-consent-confirm/);
+  assert.doesNotMatch(privacy, /data-consent-confirm/);
   assert.match(privacy, /data-consent-status-analytics/);
   assert.match(privacy, /data-consent-status-replay/);
   assert.match(privacy, /data-consent-saved/);
-  assert.match(privacy, /Type[\s\S]*opt out/);
-  assert.match(privacy, /not a global suppression/i);
+  assert.match(privacy, /Save preferences/);
+  assert.match(privacy, /Other browsers and devices keep their own preferences/i);
   assert.doesNotMatch(privacy, /both default to off/i);
   assert.doesNotMatch(privacy, /Do Not Track/);
   assert.doesNotMatch(privacy, /Global Privacy Control/);

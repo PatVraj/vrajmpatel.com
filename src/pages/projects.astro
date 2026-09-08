@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import ContactBlock from "../components/ContactBlock.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import { isCaseStudy, isPublicProject, sortProjects } from "../lib/projects";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -20,7 +21,7 @@ const notes = publicProjects.filter((entry) => !isCaseStudy(entry)).sort(sortPro
     </h1>
     <p class="mt-5 text-lg leading-8 text-slate-600 dark:text-slate-400">
       A focused selection of backend systems, applied ML, and data engineering.
-      Each case study explains the contribution, constraints, and outcome.
+      Explore the workflow, my contribution, and the evidence behind each system.
     </p>
   </header>
 
@@ -48,4 +49,5 @@ const notes = publicProjects.filter((entry) => !isCaseStudy(entry)).sort(sortPro
       </section>
     )
   }
+  <ContactBlock />
 </BaseLayout>

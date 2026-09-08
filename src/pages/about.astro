@@ -2,6 +2,8 @@
 import OrganizationMarks from "../components/OrganizationMarks.astro";
 import GitHubActivity from "../components/GitHubActivity.astro";
 import { organizationMarks } from "../data/organizationMarks";
+import ContactBlock from "../components/ContactBlock.astro";
+import { selectedEngineering } from "../data/recruiter";
 import { profile } from "../data/profile";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
@@ -63,7 +65,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           data-ph-event="resume_clicked"
           data-ph-placement="about"
           class="inline-flex min-h-11 items-center underline decoration-slate-300 underline-offset-4 hover:text-blue-700 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:decoration-slate-700 dark:hover:text-blue-400"
-        >Resume</a>
+        >Resume (PDF)</a>
       </nav>
     </aside>
 
@@ -79,15 +81,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             and an ML-assisted ticket-intelligence platform.
           </p>
           <p>
-            My Indian parliamentary-data work began under a paid CU Boulder
-            Studio Lab appointment from January 21 through April 13, 2024. After
-            that appointment ended, I continued collaborating on the research.
-            Princeton later paid me directly under a separate appointment from
-            January 15, 2025 through May 2026. Studio Lab was the speech and
-            translation tool-evaluation phase; Princeton was the scraping,
-            orchestration, and data-structuring phase. Both were distinct from my
-            concurrent Lead Technical Research Assistant appointment at CU
-            Boulder’s Institute of Behavioral Science.
+            My parliamentary-data work grew from speech and translation evaluation
+            at CU Boulder’s Studio Lab into end-to-end pipeline engineering at
+            Princeton. <a class="text-link" href="/experience">See the separate appointments and contributions.</a>
           </p>
           <p>
             Through Purdue’s Data Mine of the Rockies, I worked directly with
@@ -100,10 +96,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             Management at CU Boulder, where I earned a B.S. in Computer Science
             with a Business minor. Outside work, I use a personal TrueNAS and
             Docker home lab to learn by operating the systems I build.
-          </p>
-          <p>
-            I’m also developing a paper on secure GitHub repository collaboration
-            for work governed by federal data-protection agreements.
           </p>
         </div>
       </section>
@@ -163,6 +155,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </div>
   </div>
 
+  <section class="page-section" aria-labelledby="engineering-notes" data-reveal>
+    <p class="eyebrow">Inside the work</p>
+    <h2 id="engineering-notes" class="section-title">Selected engineering decisions</h2>
+    <p class="muted-copy">A few places to look beyond the contribution count.</p>
+    <ul class="engineering-links">{selectedEngineering.map(item => <li><a class="text-link" href={item.href}>{item.title}</a><p>{item.description}</p></li>)}</ul>
+  </section>
   <section class="mt-14 border-y border-slate-200 py-10 sm:mt-16 sm:py-12 dark:border-slate-800" aria-labelledby="github-activity-heading">
     <div class="max-w-3xl">
       <p class="font-mono text-xs text-slate-500 dark:text-slate-400">Public engineering activity</p>
@@ -177,4 +175,5 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <GitHubActivity />
   </section>
 
+  <ContactBlock />
 </BaseLayout>

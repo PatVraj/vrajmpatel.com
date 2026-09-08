@@ -1,0 +1,85 @@
+---
+import { projectDemos } from "../data/projectDemos";
+interface Props { project: string; }
+const { project } = Astro.props;
+const demo = projectDemos[project];
+---
+{demo && <section id="walkthrough" class="workflow-demo page-section ph-no-capture" aria-labelledby="walkthrough-heading" data-workflow-demo>
+  <div data-reveal>
+    <p class="eyebrow">Interactive example · synthetic data</p>
+    <h2 id="walkthrough-heading" class="section-title">{demo.title}</h2>
+    <p class="muted-copy">{demo.description}</p>
+  </div>
+  <div class="workflow-surface" data-reveal>
+    <nav class="workflow-controls" aria-label="Example steps" hidden>
+      {demo.steps.map((step, i) => <button type="button" data-step={i} aria-controls={`demo-panel-${i}`} aria-pressed={i === 0 ? "true" : "false"}>
+        <span class="eyebrow" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span><span>{step.title}</span>
+      </button>)}
+    </nav>
+    {demo.steps.map((step, i) => <section class="workflow-panel" id={`demo-panel-${i}`} data-panel={i} aria-labelledby={`demo-title-${i}`}>
+      <div class="workflow-panel-heading"><p class="eyebrow">Step {i + 1} of {demo.steps.length}</p><h3 id={`demo-title-${i}`}>{step.title}</h3><p>{step.description}</p></div>
+      <dl class="workflow-record">{step.fields.map(field => <div><dt>{field.label}</dt><dd data-field={field.label} data-original-value={field.value}>{field.value}</dd></div>)}</dl>
+      {step.action && <div class="workflow-actions" hidden>
+        <button type="button" class="button-primary" data-demo-action data-updates={JSON.stringify(step.action.updates)}>{step.action.label}</button>
+        <p class="workflow-result" data-action-result hidden>{step.action.result}</p>
+      </div>}
+    </section>)}
+    <div class="workflow-footer workflow-controls" hidden>
+      <button type="button" class="text-link" data-previous>Previous step</button>
+      <button type="button" class="text-link" data-reset>Start over</button>
+      <button type="button" class="text-link" data-next>Next step</button>
+    </div>
+  </div>
+  <p class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-demo-status></p>
+  <noscript><p class="muted-copy">All steps are shown. Enable JavaScript to step through the example and try the illustrative actions.</p></noscript>
+</section>}
+<script>
+  import { reveal } from "../lib/motion";
+  document.querySelectorAll<HTMLElement>("[data-workflow-demo]").forEach(root => {
+    const panels = [...root.querySelectorAll<HTMLElement>("[data-panel]")];
+    const selectors = [...root.querySelectorAll<HTMLButtonElement>("[data-step]")];
+    const previous = root.querySelector<HTMLButtonElement>("[data-previous]")!;
+    const next = root.querySelector<HTMLButtonElement>("[data-next]")!;
+    const reset = root.querySelector<HTMLButtonElement>("[data-reset]")!;
+    const status = root.querySelector<HTMLElement>("[data-demo-status]")!;
+    let current = 0;
+    function show(index: number, announce = true) {
+      current = Math.max(0, Math.min(index, panels.length - 1));
+      panels.forEach((panel, i) => { panel.hidden = i !== current; });
+      selectors.forEach((button, i) => button.setAttribute("aria-pressed", String(i === current)));
+      previous.disabled = current === 0;
+      next.disabled = current === panels.length - 1;
+      next.textContent = current === panels.length - 1 ? "Last step" : `Next: ${selectors[current + 1].lastElementChild?.textContent}`;
+      if (announce) {
+        status.textContent = `Step ${current + 1} of ${panels.length}: ${panels[current].querySelector("h3")?.textContent}. ${panels[current].querySelector(".workflow-panel-heading > p:last-child")?.textContent}`;
+        reveal(panels[current], 6);
+      }
+    }
+    selectors.forEach((button, i) => button.addEventListener("click", () => show(i)));
+    previous.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    reset.addEventListener("click", () => {
+      root.querySelectorAll<HTMLElement>("[data-field]").forEach(field => { field.textContent = field.dataset.originalValue ?? ""; });
+      root.querySelectorAll<HTMLElement>("[data-action-result]").forEach(result => { result.hidden = true; });
+      root.querySelectorAll<HTMLButtonElement>("[data-demo-action]").forEach(button => { button.disabled = false; });
+      show(0);
+      selectors[0].focus({ preventScroll: true });
+    });
+    root.querySelectorAll<HTMLButtonElement>("[data-demo-action]").forEach(button => {
+      button.addEventListener("click", () => {
+        const result = button.parentElement!.querySelector<HTMLElement>("[data-action-result]")!;
+        const updates: Record<string, string> = JSON.parse(button.dataset.updates ?? "{}");
+        button.closest("[data-panel]")?.querySelectorAll<HTMLElement>("[data-field]").forEach(field => {
+          const value = updates[field.dataset.field ?? ""];
+          if (value !== undefined) field.textContent = value;
+        });
+        result.hidden = false;
+        button.disabled = true;
+        status.textContent = result.textContent;
+        reveal(result, 4);
+      });
+    });
+    show(0, false);
+    root.querySelectorAll<HTMLElement>(".workflow-controls, .workflow-actions").forEach(control => { control.hidden = false; });
+  });
+</script>

@@ -30,7 +30,7 @@ const hasRichActions = Boolean(
 
 {
   variant === "compact" ? (
-    <article class="grid gap-3 border-t border-slate-200 py-6 sm:grid-cols-[8rem_1fr] sm:gap-7 dark:border-slate-800">
+    <article data-reveal class="project-row grid gap-3 border-t border-slate-200 py-6 sm:grid-cols-[8rem_1fr] sm:gap-7 dark:border-slate-800">
       <div>
         {showDomain && (
           <p class="font-mono text-xs leading-5 text-slate-500 dark:text-slate-400">
@@ -55,6 +55,7 @@ const hasRichActions = Boolean(
             {entry.data.summary}
           </p>
         )}
+        {entry.data.contribution && <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-700 dark:text-slate-300">{entry.data.contribution}</p>}
         {entry.data.proof?.[0] && (
           <p class="mt-3 border-l-2 border-blue-600 pl-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
             <strong class="font-semibold text-slate-950 dark:text-white">
@@ -75,7 +76,7 @@ const hasRichActions = Boolean(
       </div>
     </article>
   ) : (
-    <article class="grid gap-3 border-t border-slate-200 py-7 sm:grid-cols-[9rem_1fr] sm:gap-7 dark:border-slate-800">
+    <article data-reveal class="project-row grid gap-3 border-t border-slate-200 py-7 sm:grid-cols-[9rem_1fr] sm:gap-7 dark:border-slate-800">
       <div>
         {showDomain && (
           <>

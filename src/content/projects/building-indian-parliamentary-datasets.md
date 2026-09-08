@@ -3,18 +3,19 @@ title: 'Indian Parliamentary Data'
 domain: 'Research'
 featured: true
 order: 2
+visibility: 'public'
 tech: ['Python', 'Selenium', 'SQLite', 'AWS', 'Google Cloud', 'Azure', 'Deepgram', 'PyMuPDF']
-summary: 'Multi-vendor speech and translation evaluation followed by a recoverable end-to-end pipeline for parliamentary records, campaign audio, and structured analysis data.'
-contribution: 'Tool benchmarking at Studio Lab · End-to-end data-pipeline engineering at Princeton'
-setting: 'CU Boulder Studio Lab and Princeton University · Separate paid appointments'
-status: 'Princeton appointment concluded · May 2026'
+summary: "A restartable pipeline that turns parliamentary documents and campaign audio into structured research data."
+contribution: "I evaluated speech and translation tools at Studio Lab, then built the end-to-end pipeline at Princeton."
+setting: "CU Boulder Studio Lab · Princeton University"
+status: "Princeton appointment completed · May 2026"
 proof:
-  - value: '40+ GB'
-    label: '2014 and 2019 campaign audio processed after multi-vendor tool evaluation'
-  - value: 'Multi-decade'
-    label: 'Lok Sabha and Rajya Sabha records collected for research'
-  - value: 'Thousands'
-    label: 'PDF statements parsed and mapped to standardized ministry names'
+  - value: "40+ GB of audio"
+    label: "2014 and 2019 campaign recordings processed after tool evaluation."
+  - value: "Multi-decade archives"
+    label: "Lok Sabha and Rajya Sabha records collected for research."
+  - value: "Thousands of PDFs"
+    label: "Parliamentary statements parsed and mapped to standardized ministry names."
 systemPath:
   - title: 'Tool evaluation'
     purpose: 'Speech and translation services are compared against the needs of the research workflow before they become pipeline dependencies.'
@@ -31,11 +32,10 @@ systemPath:
   - title: 'Recovery and review'
     purpose: 'A failed stage can restart without discarding completed work or hiding transformation decisions.'
     technical: 'Saved state, intermediate outputs, and reviewable mappings keep processing recoverable and normalization decisions auditable.'
+overview:
+  problem: "Political archives span dynamic pages, long recordings, PDFs, and inconsistent ministry names. Researchers need traceable outputs without restarting hours of collection after an interruption."
+  built: "I designed comparative speech and translation evaluations at Studio Lab. In a later Princeton appointment, I built archive scraping, orchestration, PDF extraction, normalization, and resumable processing."
 ---
-
-## The challenge
-
-Indian political archives span dynamic web pages, long audio recordings, PDFs, and inconsistent institutional names. The work had two distinct phases: first determining which speech and translation tools fit the research workflow, then engineering the collection and processing pipeline end to end.
 
 ## Studio Lab: evaluation phase
 
@@ -59,4 +59,4 @@ I parsed thousands of parliamentary statements and used fuzzy matching to map in
 
 ## Research context
 
-The evaluation work began under a paid CU Boulder Studio Lab appointment from January 21 through April 13, 2024. After that appointment ended, I continued collaborating on the research. Princeton later paid me directly under a separate appointment beginning January 15, 2025 for the end-to-end engineering phase; that appointment concluded in May 2026. The roles are listed separately because the employers, appointments, and contribution phases were distinct even though the research project continued across them.
+This project spanned two separate paid appointments: Studio Lab at CU Boulder (January 21–April 13, 2024) and Princeton (January 15, 2025–May 2026), with continued research collaboration between them. [Experience](/experience) lists the roles and their distinct contributions.

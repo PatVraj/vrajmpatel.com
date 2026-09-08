@@ -1,0 +1,43 @@
+---
+interface Props { sections: { id: string; label: string }[]; }
+const { sections } = Astro.props;
+---
+<nav class="case-nav" aria-label="On this page" data-case-navigation>
+  {sections.map((section, index) => <a href={`#${section.id}`} aria-current={index === 0 ? "location" : undefined}>{section.label}</a>)}
+</nav>
+<script>
+  const nav = document.querySelector<HTMLElement>("[data-case-navigation]");
+  if (nav) {
+    const links = [...nav.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')];
+    const sections = links.map(link => document.getElementById(link.hash.slice(1)));
+    let pending = false;
+    const update = () => {
+      let current = 0;
+      sections.forEach((section, i) => { if (section && section.getBoundingClientRect().top <= 170) current = i; });
+      links.forEach((link, i) => {
+        if (i === current) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      });
+      pending = false;
+    };
+    document.addEventListener("scroll", () => {
+      if (!pending) { pending = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  }
+  // Deep links to evidence remain useful when an ancestor is collapsed.
+  const openHashTarget = () => {
+    let target: HTMLElement | null = null;
+    try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch { return; }
+    if (!target) return;
+    let ancestor = target.parentElement;
+    let opened = false;
+    while (ancestor) {
+      if (ancestor instanceof HTMLDetailsElement && !ancestor.open) { ancestor.open = true; opened = true; }
+      ancestor = ancestor.parentElement;
+    }
+    if (opened) target.scrollIntoView({ behavior: "instant" });
+  };
+  window.addEventListener("hashchange", openHashTarget);
+  openHashTarget();
+</script>
