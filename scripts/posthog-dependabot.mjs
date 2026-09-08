@@ -17,15 +17,6 @@ const requiredMergeChecks = new Set([
   "Dependency review",
 ]);
 
-export const enableAutoMergeMutation =
-  "mutation EnablePostHogAutoMerge(" +
-  "$pullRequestId: ID!, $expectedHeadOid: GitObjectID!) {" +
-  " enablePullRequestAutoMerge(input: {" +
-  " pullRequestId: $pullRequestId, mergeMethod: SQUASH," +
-  " expectedHeadOid: $expectedHeadOid" +
-  " }) { pullRequest { number } }" +
-  "}";
-
 function parseExactSemver(version) {
   const match = exactSemver.exec(version);
   return match ? match.slice(1).map(Number) : undefined;
@@ -107,10 +98,6 @@ export function hasRequiredMergeRules(rules) {
   );
 }
 
-export function autoMergeVariables(pullRequestId, expectedHeadOid) {
-  return { pullRequestId, expectedHeadOid };
-}
-
 function skip(reason) {
   console.log("PostHog auto-merge skipped: " + reason);
 }
@@ -130,6 +117,7 @@ async function githubRest(repository, path, token, options = {}) {
       method: options.method ?? "GET",
       headers: {
         Accept: "application/vnd.github+json",
+        "Content-Type": "application/json",
         Authorization: "Bearer " + token,
         "X-GitHub-Api-Version": "2022-11-28",
       },
@@ -147,31 +135,22 @@ async function githubRest(repository, path, token, options = {}) {
   return response.status === 204 ? undefined : response.json();
 }
 
-async function githubGraphql(query, variables, token) {
-  const response = await fetch("https://api.github.com/graphql", {
-    method: "POST",
-    headers: {
-      Accept: "application/vnd.github+json",
-      Authorization: "Bearer " + token,
-      "Content-Type": "application/json",
-      "X-GitHub-Api-Version": "2022-11-28",
-    },
-    body: JSON.stringify({ query, variables }),
+export async function mergeVerifiedUpdate(repository, pullNumber, expectedHeadSha, token) {
+  const result = await githubRest(repository, "/pulls/" + pullNumber + "/merge", token, {
+    method: "PUT",
+    body: { sha: expectedHeadSha, merge_method: "squash" },
   });
-
-  if (!response.ok) {
-    throw new Error("GitHub GraphQL API returned " + response.status);
+  if (result?.merged !== true || !/^[a-f0-9]{40}$/.test(result.sha ?? "")) {
+    throw new Error("GitHub did not confirm the verified pull request was merged");
   }
 
-  const result = await response.json();
-  if (result.errors?.length) {
-    throw new Error(
-      "GitHub GraphQL API rejected auto-merge: " +
-        result.errors.map(({ message }) => message).join("; "),
-    );
-  }
-
-  return result.data;
+  // GITHUB_TOKEN merges do not trigger push workflows. Dispatch the existing
+  // main build explicitly so its tests, privacy gate, and deployment still run.
+  await githubRest(repository, "/actions/workflows/ci.yml/dispatches", token, {
+    method: "POST",
+    body: { ref: "main" },
+  });
+  return result.sha;
 }
 
 async function fileAt(repository, path, sha, token) {
@@ -232,11 +211,6 @@ export async function main(environment = process.env) {
 
   if (pull.head.sha !== run.head_sha) {
     skip("the verified commit is no longer the pull request head");
-    return;
-  }
-
-  if (pull.auto_merge) {
-    skip("auto-merge is already enabled");
     return;
   }
 
@@ -309,18 +283,24 @@ export async function main(environment = process.env) {
     return;
   }
 
-  await githubGraphql(
-    enableAutoMergeMutation,
-    autoMergeVariables(pull.node_id, run.head_sha),
-    token,
-  );
+  const currentPull = await githubRest(repository, "/pulls/" + pullNumber, token);
+  if (
+    currentPull.state !== "open" || currentPull.draft ||
+    currentPull.head.sha !== run.head_sha || currentPull.base.ref !== "main" ||
+    currentPull.base.sha !== pull.base.sha
+  ) {
+    skip("the pull request was closed or changed during validation");
+    return;
+  }
+  if (currentPull.mergeable_state !== "clean") {
+    skip("GitHub has not confirmed the current pull request is ready to merge");
+    return;
+  }
+
+  const mergedSha = await mergeVerifiedUpdate(repository, pullNumber, run.head_sha, token);
   console.log(
-    "Enabled squash auto-merge for posthog-js " +
-      fromVersion +
-      " -> " +
-      toVersion +
-      " in PR #" +
-      pullNumber,
+    "Merged posthog-js " + fromVersion + " -> " + toVersion +
+    " in PR #" + pullNumber + " at " + mergedSha + "; main verification requested",
   );
 }
 
