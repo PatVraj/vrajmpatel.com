@@ -22,6 +22,9 @@ export const accounts = Object.freeze([
 
 export const contributionQuery = `
   query PortfolioContributionActivity($from: DateTime!, $to: DateTime!) {
+    viewer {
+      login
+    }
     personal: user(login: "basechildren") {
       login
       contributionsCollection(from: $from, to: $to) {
@@ -261,7 +264,12 @@ export function mergeWithVerifiedSnapshot(activity, verifiedSnapshot) {
   return mergedActivity;
 }
 
-export async function fetchGitHubActivity({ token, now = new Date(), fetchImpl = fetch }) {
+export async function fetchGitHubActivity({
+  token,
+  expectedViewer = "",
+  now = new Date(),
+  fetchImpl = fetch,
+}) {
   if (!token?.trim()) {
     throw new Error("GITHUB_TOKEN is required to refresh GitHub activity");
   }
@@ -285,17 +293,33 @@ export async function fetchGitHubActivity({ token, now = new Date(), fetchImpl =
     throw new Error(`GitHub GraphQL request failed with HTTP ${response.status}`);
   }
 
-  return normalizeGitHubActivity(await response.json(), now);
+  const payload = await response.json();
+  if (
+    expectedViewer &&
+    payload?.data?.viewer?.login?.toLowerCase() !== expectedViewer.toLowerCase()
+  ) {
+    throw new Error(
+      `GitHub activity token must authenticate as ${expectedViewer} to read the personal calendar`,
+    );
+  }
+
+  return normalizeGitHubActivity(payload, now);
 }
 
 export async function refreshGitHubActivity({
   token = process.env.GITHUB_TOKEN,
+  expectedViewer = process.env.GITHUB_ACTIVITY_EXPECTED_VIEWER,
   now = new Date(),
   fetchImpl = fetch,
   output = SNAPSHOT_PATH,
   verifiedSnapshot,
 } = {}) {
-  const freshActivity = await fetchGitHubActivity({ token, now, fetchImpl });
+  const freshActivity = await fetchGitHubActivity({
+    token,
+    expectedViewer,
+    now,
+    fetchImpl,
+  });
   const needsFallback = freshActivity.accounts.some(
     ({ totalContributions }) => totalContributions === 0,
   );
@@ -314,4 +338,11 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   console.log(
     `Synced ${activity.totalContributions} public contributions from ${activity.range.from} through ${activity.range.to}`,
   );
+  for (const account of activity.accounts) {
+    if (account.source === "verified-snapshot-fallback") {
+      console.warn(
+        `${account.label} activity is using the verified snapshot from ${account.verifiedAt}; set GITHUB_ACTIVITY_TOKEN to a ${account.login} token for a live calendar.`,
+      );
+    }
+  }
 }

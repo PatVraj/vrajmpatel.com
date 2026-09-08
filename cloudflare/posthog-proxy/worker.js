@@ -1,5 +1,8 @@
 const API_HOST = "us.i.posthog.com";
 const ASSET_HOST = "us-assets.i.posthog.com";
+const ANALYTICS_MODE_HEADER = "X-Vrajmpatel-Analytics-Mode";
+const TESTING_MODE = "testing";
+const ingestionPath = /^\/(?:e|i|s)\//;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,6 +20,25 @@ function withCors(response) {
     status: response.status,
     statusText: response.statusText,
     headers,
+  });
+}
+
+export function isTestingIngestion(request, pathname) {
+  return (
+    request.headers.get(ANALYTICS_MODE_HEADER) === TESTING_MODE &&
+    request.method === "POST" &&
+    ingestionPath.test(pathname)
+  );
+}
+
+function excludedTestingResponse() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      ...corsHeaders,
+      "Cache-Control": "no-store",
+      "X-Vrajmpatel-Analytics-Excluded": TESTING_MODE,
+    },
   });
 }
 
@@ -54,6 +76,10 @@ async function handleRequest(request, ctx) {
   }
 
   const url = new URL(request.url);
+  if (isTestingIngestion(request, url.pathname)) {
+    return excludedTestingResponse();
+  }
+
   const pathWithParams = url.pathname + url.search;
   const response =
     url.pathname.startsWith("/static/") || url.pathname.startsWith("/array/")

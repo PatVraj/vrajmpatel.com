@@ -48,6 +48,7 @@ function calendar(login: string, activeDate: string, count: number, level: strin
 function githubPayload() {
   return {
     data: {
+      viewer: { login: "basechildren" },
       personal: calendar("basechildren", "2026-08-26", 2, "SECOND_QUARTILE"),
       academic: calendar("PatVraj", "2026-08-26", 4, "FOURTH_QUARTILE"),
     },
@@ -63,6 +64,7 @@ test("uses only the fixed personal and academic GitHub accounts", () => {
     ],
   );
   assert.doesNotMatch(JSON.stringify(accounts), /IBS-Vraj/);
+  assert.match(contributionQuery, /viewer \{\s+login\s+\}/);
   assert.match(contributionQuery, /personal: user\(login: "basechildren"\)/);
   assert.match(contributionQuery, /academic: user\(login: "PatVraj"\)/);
 });
@@ -185,6 +187,22 @@ test("requests one year from GitHub without exposing the token", async () => {
   assert.doesNotMatch(JSON.stringify(result), /test-token/);
 });
 
+test("rejects a supplied owner token when it authenticates as another account", async () => {
+  const payload = githubPayload();
+  payload.data.viewer = { login: "PatVraj" };
+
+  await assert.rejects(
+    () =>
+      fetchGitHubActivity({
+        token: "test-token",
+        expectedViewer: "basechildren",
+        now,
+        fetchImpl: async () => Response.json(payload),
+      }),
+    /must authenticate as basechildren/,
+  );
+});
+
 test("fails closed on missing credentials and malformed calendars", async () => {
   await assert.rejects(
     fetchGitHubActivity({ token: "", now, fetchImpl: fetch }),
@@ -206,7 +224,11 @@ test("CI supports an optional owner token without committing credentials", async
 
   assert.match(
     refreshStep,
-    /GITHUB_TOKEN: \$\{\{ secrets\.GITHUB_ACTIVITY_TOKEN \|\| github\.token \}\}/,
+    /GITHUB_TOKEN: \$\{\{ secrets\.BASECHILDREN_GITHUB_ACTIVITY_TOKEN \|\| github\.token \}\}/,
+  );
+  assert.match(
+    refreshStep,
+    /GITHUB_ACTIVITY_EXPECTED_VIEWER: \$\{\{ secrets\.BASECHILDREN_GITHUB_ACTIVITY_TOKEN != '' && 'basechildren' \|\| '' \}\}/,
   );
   assert.match(refreshStep, /github.event_name != 'pull_request'/);
   assert.doesNotMatch(refreshStep, /gho_|github_pat_/);

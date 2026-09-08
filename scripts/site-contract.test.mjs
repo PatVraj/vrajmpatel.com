@@ -42,14 +42,14 @@ test("homepage and recruiter brief expose evidence-led navigation", async () => 
   assert.match(brief, /Resume \(PDF\)/);
 });
 
-test("about establishes the current profile before public GitHub activity", async () => {
+test("about leads with public GitHub activity before the profile narrative", async () => {
   const about = await readPage("about");
   const headingIndex = about.indexOf("GitHub activity across personal and academic work");
   const backgroundIndex = about.indexOf("Background");
 
   assert.ok(headingIndex > -1, "GitHub activity heading was not generated");
   assert.ok(backgroundIndex > -1, "Background heading was not generated");
-  assert.ok(backgroundIndex < headingIndex, "Background should precede GitHub activity");
+  assert.ok(headingIndex < backgroundIndex, "GitHub activity should precede Background");
   assert.match(about, /contributions across two accounts/);
   const activity = JSON.parse(await readFile("src/data/githubActivitySnapshot.json", "utf8"));
   assert.match(about, activity.source === "checked-in-baseline" ? /Snapshot verified/ : /Last refreshed/);

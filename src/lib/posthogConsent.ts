@@ -1,5 +1,9 @@
 export const CONSENT_STORAGE_KEY = "vrajmpatel-analytics-consent";
 export const CONSENT_CHANGE_EVENT = "vraj:consent-change";
+export const ANALYTICS_MODE_STORAGE_KEY = "vrajmpatel-analytics-mode";
+export const ANALYTICS_MODE_QUERY_PARAMETER = "analytics_mode";
+
+export type AnalyticsMode = "live" | "testing";
 
 export type PostHogConsent = {
   analytics: boolean;
@@ -18,6 +22,11 @@ export const optedOutConsent = (): PostHogConsent => ({
 
 export const isProductionAnalyticsHost = (hostname: string) =>
   hostname === "vrajmpatel.com" || hostname === "www.vrajmpatel.com";
+
+export const parseAnalyticsMode = (
+  value: string | null | undefined,
+): AnalyticsMode | null =>
+  value === "live" || value === "testing" ? value : null;
 
 export const parseStoredConsent = (
   raw: string | null | undefined,
