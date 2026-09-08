@@ -51,7 +51,8 @@ test("about establishes the current profile before public GitHub activity", asyn
   assert.ok(backgroundIndex > -1, "Background heading was not generated");
   assert.ok(backgroundIndex < headingIndex, "Background should precede GitHub activity");
   assert.match(about, /contributions across two accounts/);
-  assert.match(about, /Snapshot verified/);
+  const activity = JSON.parse(await readFile("src/data/githubActivitySnapshot.json", "utf8"));
+  assert.match(about, activity.source === "checked-in-baseline" ? /Snapshot verified/ : /Last refreshed/);
   assert.match(about, /<time[^>]+datetime="[^"]+Z"[^>]+data-activity-refresh-time/);
   assert.doesNotMatch(about, /data-activity-sync-time/);
   assert.match(about, /github\.com\/basechildren/);

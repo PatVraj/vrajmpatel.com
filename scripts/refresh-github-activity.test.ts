@@ -199,15 +199,15 @@ test("fails closed on missing credentials and malformed calendars", async () => 
 
 test("CI supports an optional owner token without committing credentials", async () => {
   const workflow = await readFile(".github/workflows/ci.yml", "utf8");
-  const refreshStep = workflow.slice(
-    workflow.indexOf("- name: Refresh public GitHub activity for the deployment artifact"),
-    workflow.indexOf("- name: Install dependencies"),
-  );
+  const refreshIndex = workflow.indexOf("- name: Refresh public GitHub activity for the deployment artifact");
+  const refreshStep = workflow.slice(refreshIndex, workflow.indexOf("- name: Require the production analytics key"));
+  assert.ok(workflow.indexOf("run: pnpm test") < refreshIndex,
+    "check the committed baseline before replacing it with deployment data");
 
   assert.match(
     refreshStep,
     /GITHUB_TOKEN: \$\{\{ secrets\.GITHUB_ACTIVITY_TOKEN \|\| github\.token \}\}/,
   );
-  assert.match(refreshStep, /Deployment-only refresh/);
+  assert.match(refreshStep, /github.event_name != 'pull_request'/);
   assert.doesNotMatch(refreshStep, /gho_|github_pat_/);
 });

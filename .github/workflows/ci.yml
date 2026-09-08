@@ -31,12 +31,6 @@ jobs:
           node-version: 24
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
-      - name: Refresh public GitHub activity for the deployment artifact
-        # Deployment-only refresh: the committed file remains a reviewed baseline.
-        if: github.event_name != 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_ACTIVITY_TOKEN || github.token }}
-        run: node scripts/refresh-github-activity.mjs
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Audit production dependencies
@@ -45,6 +39,12 @@ jobs:
         run: pnpm test
       - name: Check Astro templates and content
         run: pnpm check
+      - name: Refresh public GitHub activity for the deployment artifact
+        # Validate the checked-in baseline first; refresh only the build workspace.
+        if: github.event_name != 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACTIVITY_TOKEN || github.token }}
+        run: node scripts/refresh-github-activity.mjs
       - name: Require the production analytics key
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         env:
