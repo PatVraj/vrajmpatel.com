@@ -2,8 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  autoMergeVariables,
-  enableAutoMergeMutation,
+  mergeVerifiedUpdate,
   hasRequiredMergeRules,
   isAllowedPostHogLockUpdate,
   isAllowedPostHogUpdate,
@@ -109,7 +108,7 @@ test("rejects unrelated and unexpected lockfile changes", () => {
   );
 });
 
-test("requires all merge checks before enabling auto-merge", () => {
+test("requires strict main rules for every merge check", () => {
   const rule = {
     type: "required_status_checks",
     parameters: {
@@ -129,10 +128,29 @@ test("requires all merge checks before enabling auto-merge", () => {
   assert.equal(hasRequiredMergeRules([rule]), false);
 });
 
-test("binds the auto-merge mutation to the verified head", () => {
-  assert.match(enableAutoMergeMutation, /expectedHeadOid/);
-  assert.deepEqual(autoMergeVariables("PR_node_id", "abc123"), {
-    pullRequestId: "PR_node_id",
-    expectedHeadOid: "abc123",
+test("merges the verified head and dispatches main checks only after confirmed success", async (t) => {
+  const calls: { url: string; method: string; body: unknown }[] = [];
+  const head = "a".repeat(40);
+  const merged = "b".repeat(40);
+  t.mock.method(globalThis, "fetch", async (url: string, options: RequestInit) => {
+    calls.push({ url, method: options.method!, body: JSON.parse(String(options.body)) });
+    return calls.length === 1
+      ? Response.json({ merged: true, sha: merged })
+      : new Response(null, { status: 204 });
   });
+  assert.equal(await mergeVerifiedUpdate("owner/repo", 7, head, "test-token"), merged);
+  assert.deepEqual(calls, [
+    { url: "https://api.github.com/repos/owner/repo/pulls/7/merge", method: "PUT", body: { sha: head, merge_method: "squash" } },
+    { url: "https://api.github.com/repos/owner/repo/actions/workflows/ci.yml/dispatches", method: "POST", body: { ref: "main" } },
+  ]);
+});
+
+test("a rejected or unconfirmed merge never dispatches a deployment", async (t) => {
+  for (const response of [Response.json({ message: "Head changed" }, { status: 409 }), Response.json({ merged: false })]) {
+    let calls = 0;
+    const mock = t.mock.method(globalThis, "fetch", async () => { calls++; return response; });
+    await assert.rejects(mergeVerifiedUpdate("owner/repo", 7, "a".repeat(40), "test-token"));
+    assert.equal(calls, 1);
+    mock.mock.restore();
+  }
 });

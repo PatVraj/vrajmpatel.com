@@ -8,10 +8,11 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 jobs:
-  enable-auto-merge:
-    name: Enable safe PostHog auto-merge
+  merge-verified-update:
+    name: Merge verified PostHog update
     if: >-
       ${{ github.event.workflow_run.conclusion == 'success' &&
           github.event.workflow_run.event == 'pull_request' }}
@@ -32,7 +33,7 @@ jobs:
           cache: pnpm
       - name: Install trusted validation dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
-      - name: Validate and enable squash auto-merge
+      - name: Validate, squash merge, and request main verification
         run: node scripts/posthog-dependabot.mjs
         env:
           GITHUB_TOKEN: ${{ github.token }}
