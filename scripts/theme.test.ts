@@ -6,8 +6,8 @@ import ts from "typescript";
 
 const layout = readFileSync(new URL("../src/layouts/BaseLayout.astro", import.meta.url), "utf8");
 const toggle = readFileSync(new URL("../src/components/ThemeToggle.astro", import.meta.url), "utf8");
-const initialScript = layout.match(/<script is:inline>([\s\S]*?)<\/script>/)![1];
-const toggleScript = ts.transpileModule(toggle.match(/<script>([\s\S]*?)<\/script>/)![1], {
+const initialScript = layout.match(/<script is:inline>([\s\S]*?)<\/script>/i)![1];
+const toggleScript = ts.transpileModule(toggle.match(/<script>([\s\S]*?)<\/script>/i)![1], {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
 }).outputText;
 
