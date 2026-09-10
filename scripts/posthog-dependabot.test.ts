@@ -114,8 +114,7 @@ test("requires strict main rules for every merge check", () => {
     parameters: {
       strict_required_status_checks_policy: true,
       required_status_checks: [
-        { context: "Quality (Node 24 LTS)" },
-        { context: "Compatibility (Node 26 Current)" },
+        { context: "Quality (Node 26)" },
         { context: "Dependency review" },
       ],
     },

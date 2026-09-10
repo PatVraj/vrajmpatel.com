@@ -5,15 +5,15 @@ portfolio. It is a static Astro site deployed with GitHub Pages.
 
 ## Local development
 
-Use Node.js 24 LTS and the pnpm version declared in `package.json`.
+Use Node.js 26 and the pnpm version declared in `package.json`.
 
 ```bash
 pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-The development server starts at `http://localhost:4321`. Node.js 26 is also
-tested in CI as a forward-compatibility check.
+The development server starts at `http://localhost:4321`. `.nvmrc` selects
+Node.js 26 for local development and both GitHub Actions workflows.
 
 ## Updating the site
 
@@ -86,6 +86,6 @@ published releases for 24 hours before they can enter the lockfile. Compatible
 PostHog minor and patch updates merge only after the full CI workflow passes;
 major updates remain manual.
 
-Pull requests build the site on Node.js 24 and 26. A successful push to `main`
-deploys the exact artifact produced by the Node.js 24 quality job. Third-party
+Pull requests build the site on Node.js 26. A successful push to `main`
+deploys the exact artifact produced by the quality job. Third-party
 GitHub Actions are pinned to immutable commit SHAs.
