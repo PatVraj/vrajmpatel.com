@@ -117,11 +117,16 @@ const structuredData =
     ></script>
     <script is:inline>
       (() => {
-        const savedTheme = localStorage.getItem("theme");
+        let savedTheme = null;
+        try {
+          savedTheme = localStorage.getItem("theme");
+        } catch {
+          // Storage can be blocked; the system preference still works.
+        }
         const prefersDark = window.matchMedia(
           "(prefers-color-scheme: dark)",
         ).matches;
-        const isDark = savedTheme ? savedTheme === "dark" : prefersDark;
+        const isDark = savedTheme === "dark" || (savedTheme !== "light" && prefersDark);
         document.documentElement.classList.toggle("dark", isDark);
         document.documentElement.style.colorScheme = isDark ? "dark" : "light";
       })();

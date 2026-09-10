@@ -12,8 +12,7 @@ const allowedPostHogLockPackages = new Set([
   "@posthog/types",
 ]);
 const requiredMergeChecks = new Set([
-  "Quality (Node 24 LTS)",
-  "Compatibility (Node 26 Current)",
+  "Quality (Node 26)",
   "Dependency review",
 ]);
 
@@ -279,7 +278,7 @@ export async function main(environment = process.env) {
 
   const rules = await githubRest(repository, "/rules/branches/main", token);
   if (!hasRequiredMergeRules(rules)) {
-    skip("main does not require every quality, compatibility, and dependency-review check");
+    skip("main does not require every quality and dependency-review check");
     return;
   }
 

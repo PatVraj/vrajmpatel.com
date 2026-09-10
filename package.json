@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "packageManager": "pnpm@11.24.0",
   "engines": {
-    "node": "^24.0.0 || ^26.0.0"
+    "node": "^26.0.0"
   },
   "scripts": {
     "dev": "astro dev",
@@ -21,10 +21,10 @@
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.3.1",
+    "astro": "^7.3.2",
     "astro-og-canvas": "^0.13.1",
     "canvaskit-wasm": "0.42.0",
-    "posthog-js": "1.427.3",
+    "posthog-js": "1.428.7",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
